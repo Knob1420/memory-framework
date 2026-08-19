@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" font-family="Noto Sans Mono CJK SC, sans-serif">
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#374151"/>
+    </marker>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B7280"/>
+    </marker>
+    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3AED"/>
+    </marker>
+    <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#DC2626"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="860" fill="#FAFAFA"/>
+  <text x="600" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">Memory × Agent 时序图</text>
+
+  <!-- 泳道 -->
+  <rect x="60" y="50" width="140" height="30" rx="5" fill="#10B981"/>
+  <text x="130" y="70" text-anchor="middle" font-size="13" font-weight="bold" fill="white">User</text>
+  <rect x="380" y="50" width="200" height="30" rx="5" fill="#3B82F6"/>
+  <text x="480" y="70" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Agent (opencode)</text>
+  <rect x="820" y="50" width="200" height="30" rx="5" fill="#F59E0B"/>
+  <text x="920" y="70" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Memory</text>
+
+  <line x1="130" y1="85" x2="130" y2="840" stroke="#9CA3AF" stroke-dasharray="4,3"/>
+  <line x1="480" y1="85" x2="480" y2="840" stroke="#9CA3AF" stroke-dasharray="4,3"/>
+  <line x1="920" y1="85" x2="920" y2="840" stroke="#9CA3AF" stroke-dasharray="4,3"/>
+
+  <!-- ═════ 阶段 1: 启动注入 ═════ -->
+  <rect x="50" y="95" width="1100" height="105" rx="4" fill="#DBEAFE" opacity="0.4"/>
+  <text x="70" y="112" font-size="12" font-weight="bold" fill="#1E40AF">阶段 1 · 启动注入</text>
+
+  <line x1="130" y1="130" x2="475" y2="130" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="300" y="124" text-anchor="middle" font-size="10" fill="#1F2937">"数传协议生成"</text>
+
+  <line x1="485" y1="155" x2="915" y2="155" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="149" text-anchor="middle" font-size="10" fill="#1F2937">prompt hook → POST /prompt</text>
+
+  <rect x="930" y="120" width="240" height="70" rx="4" fill="white" stroke="#F59E0B"/>
+  <text x="940" y="138" font-size="9" fill="#92400E">load_always_on: 读 通用.md</text>
+  <text x="940" y="153" font-size="9" fill="#92400E">load_catalog: 关键词匹配场景</text>
+  <text x="940" y="168" font-size="9" fill="#92400E">  → 读 数传.md 全文</text>
+  <text x="940" y="183" font-size="9" fill="#92400E">  + 其他场景摘要 (heat排序)</text>
+
+  <line x1="915" y1="195" x2="485" y2="195" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="189" text-anchor="middle" font-size="10" fill="#374151">通用.md + 数传.md + 其他场景摘要</text>
+
+  <!-- ═════ 阶段 2: 运行中 ═════ -->
+  <rect x="50" y="215" width="1100" height="380" rx="4" fill="#FEF3C7" opacity="0.4"/>
+  <text x="70" y="232" font-size="12" font-weight="bold" fill="#92400E">阶段 2 · 运行中 (agent 按需查)</text>
+
+  <!-- search code -->
+  <line x1="485" y1="255" x2="915" y2="255" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="249" text-anchor="middle" font-size="10" fill="#1F2937">① search("帧解析", type='code')</text>
+  <line x1="915" y1="270" x2="485" y2="270" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="264" text-anchor="middle" font-size="9" fill="#374151">→ wiki 摘要 (content=None)</text>
+
+  <line x1="485" y1="290" x2="915" y2="290" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="284" text-anchor="middle" font-size="10" fill="#1F2937">② get('wiki_application')</text>
+  <line x1="915" y1="305" x2="485" y2="305" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="299" text-anchor="middle" font-size="9" fill="#374151">→ wiki 全文 (知道有 parse_packet)</text>
+
+  <!-- code_explore -->
+  <line x1="485" y1="330" x2="915" y2="330" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="324" text-anchor="middle" font-size="10" fill="#1F2937">③ code_explore("帧解析")</text>
+  <line x1="915" y1="345" x2="485" y2="345" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="339" text-anchor="middle" font-size="9" fill="#374151">→ 按文件分组返回源码 (packet.c + crc.c)</text>
+
+  <!-- code_graph -->
+  <line x1="485" y1="370" x2="915" y2="370" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="364" text-anchor="middle" font-size="10" fill="#1F2937">④ code_graph("parse_packet", "impact")</text>
+  <line x1="915" y1="385" x2="485" y2="385" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="379" text-anchor="middle" font-size="9" fill="#374151">→ 影响: main (depth=1)</text>
+
+  <!-- search facts -->
+  <line x1="485" y1="410" x2="915" y2="410" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="404" text-anchor="middle" font-size="10" fill="#1F2937">⑤ search("字节序 CRC", type='facts')</text>
+  <line x1="915" y1="425" x2="485" y2="425" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="419" text-anchor="middle" font-size="9" fill="#374151">→ [{content:"memcpy反转用ntohl"}, {content:"v2新增CRC-16"}] 全文</text>
+
+  <!-- search docs -->
+  <line x1="485" y1="450" x2="915" y2="450" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="444" text-anchor="middle" font-size="10" fill="#1F2937">⑥ search("TCI19001", type='docs')</text>
+  <line x1="915" y1="465" x2="485" y2="465" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="459" text-anchor="middle" font-size="9" fill="#374151">→ [{chunk_017, summary:"TCI19001格式", content:None}] 摘要</text>
+
+  <line x1="485" y1="485" x2="915" y2="485" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="479" text-anchor="middle" font-size="10" fill="#1F2937">⑦ get('chunk_017')</text>
+  <line x1="915" y1="500" x2="485" y2="500" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="494" text-anchor="middle" font-size="9" fill="#374151">→ "TCI19001 0012_1Byte(file_type)..." 精确数据</text>
+
+  <!-- get other scene -->
+  <line x1="485" y1="525" x2="915" y2="525" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="519" text-anchor="middle" font-size="10" fill="#1F2937">⑧ get('CAN') ←跨场景</text>
+  <line x1="915" y1="540" x2="485" y2="540" stroke="#6B7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+  <text x="700" y="534" text-anchor="middle" font-size="9" fill="#374151">→ CAN.md 全文</text>
+
+  <!-- 事件采集 -->
+  <line x1="485" y1="570" x2="915" y2="570" stroke="#7C3AED" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#a3)"/>
+  <text x="700" y="564" text-anchor="middle" font-size="9" fill="#7C3AED">[plugin 持续抓事件] → POST /events → session_raw</text>
+
+  <!-- ═════ 阶段 3: 任务执行 ═════ -->
+  <rect x="50" y="605" width="1100" height="60" rx="4" fill="#D1FAE5" opacity="0.4"/>
+  <text x="70" y="622" font-size="12" font-weight="bold" fill="#065F46">阶段 3 · 任务执行</text>
+  <text x="600" y="640" text-anchor="middle" font-size="10" fill="#065F46">agent 综合: scene.md(prompt) + 参考代码(explore) + 经验(facts) + 精确数据(docs) + 影响范围(graph)</text>
+  <line x1="475" y1="655" x2="135" y2="655" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="300" y="649" text-anchor="middle" font-size="10" fill="#1F2937">返回生成的代码</text>
+
+  <!-- ═════ 阶段 4: 后台沉淀 ═════ -->
+  <rect x="50" y="680" width="1100" height="165" rx="4" fill="#EDE9FE" opacity="0.4"/>
+  <text x="70" y="700" font-size="12" font-weight="bold" fill="#5B21B6">阶段 4 · 后台沉淀 (异步)</text>
+
+  <line x1="480" y1="715" x2="915" y2="715" stroke="#374151" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="700" y="709" text-anchor="middle" font-size="10" fill="#1F2937">session.idle</text>
+
+  <rect x="930" y="725" width="250" height="105" rx="4" fill="white" stroke="#7C3AED"/>
+  <text x="940" y="745" font-size="10" font-weight="bold" fill="#5B21B6">演化引擎:</text>
+  <text x="940" y="762" font-size="9" fill="#5B21B6">TraceDeriver: session→trace</text>
+  <text x="940" y="778" font-size="9" fill="#5B21B6">L2Extractor: trace→facts</text>
+  <text x="940" y="794" font-size="9" fill="#5B21B6">facts 累积≥3 → LLM 重写 scene.md</text>
+  <text x="940" y="810" font-size="9" fill="#5B21B6">月级: 跨场景相似 → 升级通用</text>
+
+
+</svg>

@@ -1,0 +1,3 @@
+# P0：只要 workspace 名单（编排门注册表）。
+# P1 起长成组件注册表（见 docs/contracts/components.md 的 yaml 结构）。
+workspaces: [codegen, docgen]

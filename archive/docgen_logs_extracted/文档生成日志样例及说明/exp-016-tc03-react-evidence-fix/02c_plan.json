@@ -1,0 +1,221 @@
+{
+  "plan_artifact": {
+    "_meta": {
+      "source": "plan",
+      "version": "v2.0",
+      "timestamp": "2026-07-31 06:57:49",
+      "prompt_version": "v2.1"
+    },
+    "items": [
+      {
+        "target_type": "field",
+        "target_id": "指令内容",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1001 行提取指令内容，填入 8E0016AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1001 控制GPU启动区选择/系统从EMMC启动，指令内容 8E0016AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_2",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1002 行提取指令内容，填入 8E0017AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1002 控制GPU启动区选择/系统从NVME0启动，指令内容 8E0017AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_3",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1005 行提取指令内容，填入 8E2000AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1005 控制主GE口选择，指令内容 8E2000AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_4",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1006 行提取指令内容，填入 8E2001AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1006 控制备GE口选择，指令内容 8E2001AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_5",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1003 行提取指令内容，填入 8E0014AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1003 GPU下电控制，指令内容 8E0014AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_6",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1004 行提取指令内容，填入 8E0015AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1004 GPU上电控制，指令内容 8E0015AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_7",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1007 行提取指令内容，填入 8E001100（GPU-CPLD段CANA复位）",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1007 CANA总线复位（GPU-CPLD段），指令内容 8E001100 在参考文档中明确给出，与前序字段同属 8E 段"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_8",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI1008 行提取指令内容，填入 8E001101（GPU-CPLD段CANB复位）",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI1008 CANB总线复位（GPU-CPLD段），指令内容 8E001101 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_9",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15001 行提取指令内容，填入 8F0010AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI15001 GPU强制待机/停止GPU业务后由CPLD控制GPU下电，指令内容 8F0010AA 在参考文档中明确给出，与微纳GPU-SOC表序号1一致"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_10",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15002 行提取指令内容，填入 8F001100（GPU-SOC段CANA复位）",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI15002 CANA总线复位（GPU-SOC段），指令内容 8F001100 在参考文档中明确给出，与微纳GPU-SOC表序号2参数00H一致"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_11",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15003 行提取指令内容，填入 8F001001（GPU-SOC段CANB复位）",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI15003 CANB总线复位（GPU-SOC段），指令内容 8F001001 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_12",
+        "action": "skip",
+        "strategy": "参考文档中无CANC总线复位对应的指令码，保持空白",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "魔方指令表和微纳GPU-SOC表中仅有CANA(00H)、CANB(01H)、CANA&CANB(02H)三种复位类型，无CANC总线复位指令，参考文档无对应信息"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_13",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15004 行提取指令内容，填入 8F001002（GPU-SOC段CANA&CANB复位）",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI15004 CANA&CANB总线复位（GPU-SOC段），指令内容 8F001002 在参考文档中明确给出，与微纳GPU-SOC表序号2参数02H一致"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_14",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15005 行提取指令内容，填入 8F0014AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI15005 智算机计算模块GPU结束上注文件，指令内容 8F0014AA 在参考文档中明确给出，与微纳GPU-SOC表序号4一致"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_15",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15006 行提取指令内容，填入 8F0019AA",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI15006 智算机计算模块GPU校时，指令内容 8F0019AA 在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_16",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15007 行提取指令内容，填入 8F0020AA。模板描述为'载荷数据进程实时存储（SAR回波数据）'，参考文档为'图像处理进程实时存储'，按指令码匹配",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "MEDIUM",
+        "reason": "TCI15007 是参考文档中唯一的'启动实时存储'类指令，指令码 8F0020AA 明确；但模板描述'载荷数据（SAR回波数据）'与参考文档'图像处理'命名不一致，存在语义偏差"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_17",
+        "action": "fill_modify",
+        "strategy": "参考文档中仅有一个'启动实时存储'指令(TCI15007)，填入 8F0020AA。模板描述为'载荷数据（光学相机数据）'，与参考文档'图像处理'命名不一致",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "MEDIUM",
+        "reason": "参考文档中无单独的'光学相机数据存储'指令码，TCI15007(8F0020AA)是唯一的启动类指令；但命名差异较大，无法确认是否有独立的指令码"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_18",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI15008 行提取指令内容，填入 8F0021AA。模板描述为'停止载荷数据进程实时存储'，参考文档为'停止图像处理进程实时存储'",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "MEDIUM",
+        "reason": "TCI15008 是参考文档中唯一的'停止实时存储'类指令，指令码 8F0021AA 明确；但模板描述'载荷数据'与参考文档'图像处理'命名不一致"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_19",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI19001 行提取指令内容，填入 0012_1Byte(file_type)_2Byte(CRC)_123Byte(filename)",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI19001 智算机计算模块GPU开始上注文件，指令内容为复帧格式 0012_1Byte(file_type)_2Byte(CRC)_123Byte(filename)，在参考文档中明确给出"
+      },
+      {
+        "target_type": "field",
+        "target_id": "指令内容_20",
+        "action": "fill_modify",
+        "strategy": "从魔方指令表 TCI19002 行提取指令内容，填入 0013_1Byte(operate_type)_125Byte(target_process_name)",
+        "source_ref": "## 表格数据 > 魔方指令表",
+        "confidence": "HIGH",
+        "reason": "TCI19002 使用上注软件安装包更新指定软件版本，指令内容为复帧格式 0013_1Byte(operate_type)_125Byte(target_process_name)，在参考文档中明确给出"
+      }
+    ],
+    "coverage_stats": {
+      "fields_total": 20,
+      "fields_covered": 20,
+      "tables_total": 0,
+      "tables_covered": 0,
+      "coverage_rate": 1.0
+    }
+  },
+  "items_count": 20,
+  "coverage_stats": {
+    "fields_total": 20,
+    "fields_covered": 20,
+    "tables_total": 0,
+    "tables_covered": 0,
+    "coverage_rate": 1.0
+  },
+  "prompt_fallback_events": [],
+  "prompt_version": "v2.1",
+  "plan_09_summary": {
+    "table_item_count": 0,
+    "row_intent_distribution": {
+      "_no_intent": 0
+    },
+    "synthesize_rows_item_count": 0,
+    "blueprint_step_total": 0,
+    "items_with_operations_count": 0,
+    "operations_total": 0,
+    "no_rows_required_items": [],
+    "unresolved_items": []
+  }
+}

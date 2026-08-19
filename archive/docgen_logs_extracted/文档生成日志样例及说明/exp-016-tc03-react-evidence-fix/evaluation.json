@@ -1,0 +1,1499 @@
+{
+  "workflow_version": "v1",
+  "prompt_version": "v1",
+  "eval_schema_version": "2.1",
+  "workflow_name": "docgen",
+  "session_id": "exp-016-tc03-react-evidence-fix",
+  "timestamp": "2026-07-31 06:58:04",
+  "template_name": "template_template.docx",
+  "runtime_config": {
+    "model": "glm-5.1",
+    "reasoning_effort": "medium",
+    "bind_tools": true,
+    "temperature": 0
+  },
+  "prompt_versions_used": {
+    "summary": "v1.1",
+    "plan": "v2.1",
+    "stage2": "v1.5"
+  },
+  "runtime_metrics": {
+    "timing": {
+      "total_elapsed_s": 135.94,
+      "by_stage": {
+        "parse_template": {
+          "elapsed_s": 0.03
+        },
+        "wait_parse_review": {
+          "elapsed_s": 0.0
+        },
+        "extract_reference": {
+          "elapsed_s": 0.05
+        },
+        "wait_extraction_rules": {
+          "elapsed_s": 0.0
+        },
+        "summary": {
+          "elapsed_s": 52.71
+        },
+        "plan": {
+          "elapsed_s": 68.33
+        },
+        "stage2_loop": {
+          "elapsed_s": 14.62
+        },
+        "partitioned_stage2": {
+          "elapsed_s": 14.62
+        },
+        "wait_match_review": {
+          "elapsed_s": 0.0
+        },
+        "generate_document": {
+          "elapsed_s": 0.04
+        },
+        "done": {
+          "elapsed_s": 0.0
+        }
+      },
+      "llm_total_s": 142.45,
+      "llm_avg_latency_s": 20.35,
+      "llm_median_latency_s": 10.82,
+      "llm_p95_latency_s": 57.33
+    },
+    "cost": {
+      "total_input_tokens": 63585,
+      "total_output_tokens": 15044,
+      "total_tokens": 78629,
+      "total_reasoning_tokens": 6616,
+      "llm_call_count": 7,
+      "estimated_cost_usd": 0.4684,
+      "by_stage": {
+        "summary": {
+          "calls": 2,
+          "input_tokens": 15150,
+          "output_tokens": 5404,
+          "total_tokens": 20554
+        },
+        "plan": {
+          "calls": 1,
+          "input_tokens": 10720,
+          "output_tokens": 7411,
+          "total_tokens": 18131
+        },
+        "stage2": {
+          "calls": 4,
+          "input_tokens": 37715,
+          "output_tokens": 2229,
+          "total_tokens": 39944
+        }
+      },
+      "by_prompt_stage": {
+        "summary@v1.1": {
+          "calls": 2,
+          "input_tokens": 15150,
+          "output_tokens": 5404,
+          "total_tokens": 20554,
+          "cost_usd": 0.1298,
+          "latency_mean_s": 21.29,
+          "latency_median_s": 21.29,
+          "latency_p95_s": 30.7
+        },
+        "plan@v2.1": {
+          "calls": 1,
+          "input_tokens": 10720,
+          "output_tokens": 7411,
+          "total_tokens": 18131,
+          "cost_usd": 0.1277,
+          "latency_mean_s": 68.3,
+          "latency_median_s": 68.3,
+          "latency_p95_s": 68.3
+        },
+        "stage2@v1.5": {
+          "calls": 4,
+          "input_tokens": 37715,
+          "output_tokens": 2229,
+          "total_tokens": 39944,
+          "cost_usd": 0.2109,
+          "latency_mean_s": 7.89,
+          "latency_median_s": 5.89,
+          "latency_p95_s": 13.17
+        }
+      }
+    },
+    "tool_usage": {
+      "total_calls": 23,
+      "total_failures": 0,
+      "failure_rate": 0.0,
+      "by_tool": {
+        "tool_query_reference": {
+          "count": 1,
+          "failures": 0,
+          "failure_rate": 0.0
+        },
+        "tool_save_reference_summary": {
+          "count": 1,
+          "failures": 0,
+          "failure_rate": 0.0
+        },
+        "tool_save_plan": {
+          "count": 1,
+          "failures": 0,
+          "failure_rate": 0.0
+        },
+        "tool_update_field": {
+          "count": 19,
+          "failures": 0,
+          "failure_rate": 0.0
+        },
+        "tool_skip_field": {
+          "count": 1,
+          "failures": 0,
+          "failure_rate": 0.0
+        }
+      }
+    },
+    "agent_rounds": {
+      "summary": {
+        "count": 2
+      },
+      "plan": {
+        "count": 1
+      },
+      "stage2": {
+        "count": 1
+      },
+      "total": 4
+    }
+  },
+  "field_metrics": {
+    "total": 20,
+    "active": 20,
+    "filled": 19,
+    "skipped": 1,
+    "excluded": 0,
+    "fill_rate": 0.95,
+    "skip_rate": 0.05,
+    "exclude_rate": 0.0
+  },
+  "table_metrics": {
+    "total": 0,
+    "active": 0,
+    "filled": 0,
+    "total_rows": 0,
+    "fill_rate": 0
+  },
+  "document_metrics": {
+    "generated": true,
+    "fields_attempted": 19,
+    "fields_success": 19,
+    "fields_failed": 0,
+    "gen_success_rate": 1.0
+  },
+  "workflow_metrics": {
+    "stage_reached": "done",
+    "decision_count": 204,
+    "changelog_count": 135,
+    "reference_doc_count": 2,
+    "completed": true
+  },
+  "state_metrics": {
+    "mutation_density": 6.75,
+    "decision_distribution": {
+      "set_field_mode": 200,
+      "skip_field": 1,
+      "execute_fallback": 3
+    },
+    "field_rework_rate": 0.0,
+    "reworked_fields": []
+  },
+  "evaluation_metrics": {},
+  "decisions": [
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "skip_field",
+      "target": "指令内容_12",
+      "reason": "参考文档中无CANC总线复位对应的指令码：魔方指令表和微纳GPU-SOC表中仅有CANA(00H)、CANB(01H)、CANA&CANB(02H)三种复位类型，无CANC总线复位指令",
+      "stage": "stage2_loop"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）",
+      "stage": "stage1"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_2",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_3",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_4",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_5",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_6",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_7",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_8",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_9",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_10",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_11",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_12",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_13",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_14",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_15",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_16",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_17",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_18",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_19",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "set_field_mode",
+      "target": "指令内容_20",
+      "reason": "默认 modify（modify 可覆盖 fill 场景）"
+    },
+    {
+      "action": "execute_fallback",
+      "target": "指令内容_16",
+      "reason": "模板描述为\"载荷数据（SAR回波数据）\"，参考文档为\"图像处理进程实时存储\"，命名不一致但指令码匹配；参考文档中仅有唯一的启动实时存储指令，无法确认SAR和光学相机是否有各自独立指令码",
+      "stage": "stage2_loop"
+    },
+    {
+      "action": "execute_fallback",
+      "target": "指令内容_17",
+      "reason": "模板描述为\"载荷数据（光学相机数据）\"，参考文档为\"图像处理进程实时存储\"，命名不一致；参考文档中无单独的光学相机数据存储指令码，仅有一个启动类指令 TCI15007",
+      "stage": "stage2_loop"
+    },
+    {
+      "action": "execute_fallback",
+      "target": "指令内容_18",
+      "reason": "模板描述为\"停止载荷数据进程实时存储\"，参考文档为\"停止图像处理进程实时存储\"，命名不一致但指令码明确匹配",
+      "stage": "stage2_loop"
+    }
+  ],
+  "field_details": [
+    {
+      "field_id": "指令内容",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1001 控制GPU启动区选择/系统从EMMC启动"
+    },
+    {
+      "field_id": "指令内容_2",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1002 控制GPU启动区选择/系统从NVME0启动"
+    },
+    {
+      "field_id": "指令内容_3",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1005 控制主GE口选择"
+    },
+    {
+      "field_id": "指令内容_4",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1006 控制备GE口选择"
+    },
+    {
+      "field_id": "指令内容_5",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1003 GPU下电控制"
+    },
+    {
+      "field_id": "指令内容_6",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1004 GPU上电控制"
+    },
+    {
+      "field_id": "指令内容_7",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1007 CANA总线复位（GPU-CPLD段）"
+    },
+    {
+      "field_id": "指令内容_8",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI1008 CANB总线复位（GPU-CPLD段）"
+    },
+    {
+      "field_id": "指令内容_9",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15001 GPU强制待机（停止其他指令业务），与微纳GPU-SOC表序号1一致"
+    },
+    {
+      "field_id": "指令内容_10",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15002 CANA总线复位（GPU-SOC段），与微纳GPU-SOC表序号2参数00H一致"
+    },
+    {
+      "field_id": "指令内容_11",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15003 CANB总线复位（GPU-SOC段），指令内容 8F001001"
+    },
+    {
+      "field_id": "指令内容_12",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "SKIPPED",
+      "excluded": false,
+      "source": ""
+    },
+    {
+      "field_id": "指令内容_13",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15004 CANA&CANB总线复位（GPU-SOC段），指令内容 8F001002，与微纳GPU-SOC表序号2参数02H一致"
+    },
+    {
+      "field_id": "指令内容_14",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15005 智算机计算模块GPU结束上注文件，指令内容 8F0014AA"
+    },
+    {
+      "field_id": "指令内容_15",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15006 智算机计算模块GPU校时，指令内容 8F0019AA"
+    },
+    {
+      "field_id": "指令内容_16",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15007 \"GPU 启动图像处理进程实时存储\""
+    },
+    {
+      "field_id": "指令内容_17",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15007 \"GPU 启动图像处理进程实时存储\""
+    },
+    {
+      "field_id": "指令内容_18",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI15008 \"GPU 停止图像处理进程实时存储\""
+    },
+    {
+      "field_id": "指令内容_19",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI19001 \"智算机计算模块GPU开始上注文件\""
+    },
+    {
+      "field_id": "指令内容_20",
+      "label": "指令内容",
+      "type": "highlight",
+      "status": "FILLED",
+      "excluded": false,
+      "source": "魔方指令表 TCI19002 \"使用上注软件安装包更新指定软件版本\""
+    }
+  ],
+  "_output_dir": "outputs_eval/exp-016-tc03-react-evidence-fix"
+}

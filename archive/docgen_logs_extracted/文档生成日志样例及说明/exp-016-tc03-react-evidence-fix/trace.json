@@ -1,0 +1,1466 @@
+{
+  "trace": {
+    "trace_id": "exp-016-tc03-react-evidence-fix",
+    "start_time": 1285178.914081919,
+    "end_time": 1285314.857035582,
+    "duration_s": 135.94,
+    "status": "completed",
+    "metadata": {
+      "template_name": "template_template.docx",
+      "workflow": "docgen"
+    },
+    "started_at": "2026-07-30T22:55:48.696253+00:00",
+    "ended_at": "2026-07-30T22:58:04.639202+00:00"
+  },
+  "spans": [
+    {
+      "span_id": "9851b36c241944b5",
+      "parent_id": null,
+      "name": "parse_template",
+      "kind": "STAGE",
+      "start_time": 1285178.914161509,
+      "end_time": 1285178.941939212,
+      "duration_s": 0.03,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "parse_template",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.696326+00:00",
+      "ended_at": "2026-07-30T22:55:48.724104+00:00"
+    },
+    {
+      "span_id": "f23706951295402a",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941452501,
+      "end_time": 1285178.941485612,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723621+00:00",
+      "ended_at": "2026-07-30T22:55:48.723650+00:00"
+    },
+    {
+      "span_id": "58ea751632a440fa",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941530122,
+      "end_time": 1285178.941536742,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_2",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723695+00:00",
+      "ended_at": "2026-07-30T22:55:48.723701+00:00"
+    },
+    {
+      "span_id": "56e00a209bd64718",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941558612,
+      "end_time": 1285178.941563242,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_3",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723723+00:00",
+      "ended_at": "2026-07-30T22:55:48.723728+00:00"
+    },
+    {
+      "span_id": "a6a975e3863f40ad",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941580252,
+      "end_time": 1285178.941584012,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_4",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723745+00:00",
+      "ended_at": "2026-07-30T22:55:48.723748+00:00"
+    },
+    {
+      "span_id": "891d928ce096422a",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941599142,
+      "end_time": 1285178.941602532,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_5",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723764+00:00",
+      "ended_at": "2026-07-30T22:55:48.723767+00:00"
+    },
+    {
+      "span_id": "21e7c520b39943c5",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941616312,
+      "end_time": 1285178.941619272,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_6",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723781+00:00",
+      "ended_at": "2026-07-30T22:55:48.723784+00:00"
+    },
+    {
+      "span_id": "dbb4eea897bc483b",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941634232,
+      "end_time": 1285178.941637402,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_7",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723799+00:00",
+      "ended_at": "2026-07-30T22:55:48.723802+00:00"
+    },
+    {
+      "span_id": "51116685e1af437f",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941651972,
+      "end_time": 1285178.941655912,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_8",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723816+00:00",
+      "ended_at": "2026-07-30T22:55:48.723820+00:00"
+    },
+    {
+      "span_id": "d884069750ac4283",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941669572,
+      "end_time": 1285178.941672772,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_9",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723834+00:00",
+      "ended_at": "2026-07-30T22:55:48.723837+00:00"
+    },
+    {
+      "span_id": "6c6fc34e0b55421b",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941687302,
+      "end_time": 1285178.941690582,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_10",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723852+00:00",
+      "ended_at": "2026-07-30T22:55:48.723855+00:00"
+    },
+    {
+      "span_id": "2b97bfbb8f944bf9",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941704682,
+      "end_time": 1285178.941708332,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_11",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723869+00:00",
+      "ended_at": "2026-07-30T22:55:48.723873+00:00"
+    },
+    {
+      "span_id": "510bb353366f499c",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941723182,
+      "end_time": 1285178.941726472,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_12",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723888+00:00",
+      "ended_at": "2026-07-30T22:55:48.723891+00:00"
+    },
+    {
+      "span_id": "cc34591d3cb44109",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941740842,
+      "end_time": 1285178.941743922,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_13",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723905+00:00",
+      "ended_at": "2026-07-30T22:55:48.723908+00:00"
+    },
+    {
+      "span_id": "42c3719dd93a402a",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941757942,
+      "end_time": 1285178.941761292,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_14",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723922+00:00",
+      "ended_at": "2026-07-30T22:55:48.723926+00:00"
+    },
+    {
+      "span_id": "b82a02a0e2d547f3",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941776002,
+      "end_time": 1285178.941779322,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_15",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723940+00:00",
+      "ended_at": "2026-07-30T22:55:48.723944+00:00"
+    },
+    {
+      "span_id": "e5c2476d87784da0",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941794842,
+      "end_time": 1285178.941798122,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_16",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723959+00:00",
+      "ended_at": "2026-07-30T22:55:48.723962+00:00"
+    },
+    {
+      "span_id": "aabdf0655b17438c",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941812322,
+      "end_time": 1285178.941815252,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_17",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723977+00:00",
+      "ended_at": "2026-07-30T22:55:48.723980+00:00"
+    },
+    {
+      "span_id": "30d3ac7027d54d23",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941829042,
+      "end_time": 1285178.941832212,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_18",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.723993+00:00",
+      "ended_at": "2026-07-30T22:55:48.723997+00:00"
+    },
+    {
+      "span_id": "4ec211f560f447c4",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941845992,
+      "end_time": 1285178.941849042,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_19",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.724010+00:00",
+      "ended_at": "2026-07-30T22:55:48.724013+00:00"
+    },
+    {
+      "span_id": "e9bac034c59e45be",
+      "parent_id": "9851b36c241944b5",
+      "name": "rule:DefaultFieldRule",
+      "kind": "TOOL",
+      "start_time": 1285178.941862372,
+      "end_time": 1285178.941865252,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "rule_name": "DefaultFieldRule",
+        "target": "指令内容_20",
+        "target_type": "field",
+        "decision": "set_mode",
+        "reason": "默认 modify（modify 可覆盖 fill 场景）",
+        "confidence": "HIGH"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.724027+00:00",
+      "ended_at": "2026-07-30T22:55:48.724030+00:00"
+    },
+    {
+      "span_id": "cb19e385eff34a66",
+      "parent_id": null,
+      "name": "wait_parse_review",
+      "kind": "STAGE",
+      "start_time": 1285178.947102377,
+      "end_time": 1285178.947118837,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "wait_parse_review",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.729269+00:00",
+      "ended_at": "2026-07-30T22:55:48.729283+00:00"
+    },
+    {
+      "span_id": "ecae78de07e94a9a",
+      "parent_id": null,
+      "name": "extract_reference",
+      "kind": "STAGE",
+      "start_time": 1285179.018150528,
+      "end_time": 1285179.065306438,
+      "duration_s": 0.05,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "extract_reference",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.800317+00:00",
+      "ended_at": "2026-07-30T22:55:48.847474+00:00"
+    },
+    {
+      "span_id": "7bfc0a9de6294632",
+      "parent_id": null,
+      "name": "wait_extraction_rules",
+      "kind": "STAGE",
+      "start_time": 1285179.070705881,
+      "end_time": 1285179.070722811,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "wait_extraction_rules",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.852872+00:00",
+      "ended_at": "2026-07-30T22:55:48.852887+00:00"
+    },
+    {
+      "span_id": "ecd27ae234f34543",
+      "parent_id": null,
+      "name": "summary",
+      "kind": "STAGE",
+      "start_time": 1285179.097902206,
+      "end_time": 1285231.811698244,
+      "duration_s": 52.71,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "summary",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:48.880070+00:00",
+      "ended_at": "2026-07-30T22:56:41.593863+00:00"
+    },
+    {
+      "span_id": "9b9bed4b1b734c0b",
+      "parent_id": "ecd27ae234f34543",
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285189.205899069,
+      "end_time": 1285200.028795266,
+      "duration_s": 10.82,
+      "status": "ok",
+      "attributes": {
+        "call_id": "004a52980f6f4e689482de51d1a87dbc",
+        "stage": "summary",
+        "round": 1,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v1.1",
+        "bind_tools": true,
+        "call_site": "agent_loop.plan",
+        "scope": "main",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "ae751af32ae9f1da6026371556b962bcb37cbcd55f95d608e069fa2657c7d006",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 5997,
+        "output_tokens": 880,
+        "total_tokens": 6877,
+        "reasoning_tokens": 747,
+        "tool_calls_in_response": [
+          "tool_query_reference"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/004a52980f6f4e689482de51d1a87dbc.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:55:58.988067+00:00",
+      "ended_at": "2026-07-30T22:56:09.810963+00:00"
+    },
+    {
+      "span_id": "39d15f538bd54716",
+      "parent_id": "ecd27ae234f34543",
+      "name": "tool:tool_query_reference",
+      "kind": "TOOL",
+      "start_time": 1285200.037104478,
+      "end_time": 1285200.037734839,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_query_reference",
+        "target": "",
+        "stage": "summary",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:56:09.819270+00:00",
+      "ended_at": "2026-07-30T22:56:09.819899+00:00"
+    },
+    {
+      "span_id": "b24c3a897c914e09",
+      "parent_id": "39d15f538bd54716",
+      "name": "retrieval:query_reference",
+      "kind": "RETRIEVAL",
+      "start_time": 1285200.037123768,
+      "end_time": 1285200.037707249,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "query": "魔方指令表 TCI 指令内容 完整列表",
+        "result_source": "ref_index",
+        "chunk_count": 3,
+        "top_scores": [
+          5.0,
+          4.0,
+          3.0
+        ],
+        "chunk_titles": [
+          "星载智算机 / 表格",
+          "星载智算机",
+          "GPU-CPLD遥控 / 表格"
+        ],
+        "chunk_sources": [
+          "<project_root>/outputs_eval/exp-016-tc03-react-evidence-fix/working/魔方指令表.md",
+          "<project_root>/outputs_eval/exp-016-tc03-react-evidence-fix/working/魔方指令表.md",
+          "<project_root>/outputs_eval/exp-016-tc03-react-evidence-fix/working/微纳智算机遥测控数据表.md"
+        ],
+        "section_keys": [
+          "4495a7b8:13dcc216",
+          "4495a7b8:13dcc216",
+          "a0b0361f:39e3ce3a"
+        ]
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:56:09.819288+00:00",
+      "ended_at": "2026-07-30T22:56:09.819872+00:00"
+    },
+    {
+      "span_id": "e34159539e284abf",
+      "parent_id": "ecd27ae234f34543",
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285200.047100411,
+      "end_time": 1285231.801471846,
+      "duration_s": 31.75,
+      "status": "ok",
+      "attributes": {
+        "call_id": "19d02b319ca44b1798b7a0210628d136",
+        "stage": "summary",
+        "round": 2,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v1.1",
+        "bind_tools": true,
+        "call_site": "agent_loop.plan",
+        "scope": "main",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "8f3ad08e1a9a5eb300a11c2e6e4e7c469e616e2166375d98260d9c576fd26301",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 9153,
+        "output_tokens": 4524,
+        "total_tokens": 13677,
+        "reasoning_tokens": 527,
+        "tool_calls_in_response": [
+          "tool_save_reference_summary"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/19d02b319ca44b1798b7a0210628d136.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:56:09.829266+00:00",
+      "ended_at": "2026-07-30T22:56:41.583639+00:00"
+    },
+    {
+      "span_id": "34aa43712f574257",
+      "parent_id": "ecd27ae234f34543",
+      "name": "tool:tool_save_reference_summary",
+      "kind": "TOOL",
+      "start_time": 1285231.811283851,
+      "end_time": 1285231.811338911,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_save_reference_summary",
+        "target": "",
+        "stage": "summary",
+        "round": 2
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:56:41.593449+00:00",
+      "ended_at": "2026-07-30T22:56:41.593504+00:00"
+    },
+    {
+      "span_id": "864cb099c69b4285",
+      "parent_id": null,
+      "name": "plan",
+      "kind": "STAGE",
+      "start_time": 1285231.821107043,
+      "end_time": 1285300.149804288,
+      "duration_s": 68.33,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "plan",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:56:41.603275+00:00",
+      "ended_at": "2026-07-30T22:57:49.931969+00:00"
+    },
+    {
+      "span_id": "805447190b174569",
+      "parent_id": "864cb099c69b4285",
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285231.835549202,
+      "end_time": 1285300.138552088,
+      "duration_s": 68.3,
+      "status": "ok",
+      "attributes": {
+        "call_id": "cea84cfc95a84d7aabb4ca69310b687d",
+        "stage": "plan",
+        "round": 1,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v2.1",
+        "bind_tools": true,
+        "call_site": "agent_loop.plan",
+        "scope": "main",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "5e09cfd1ab2c542113ca8a6b88efc8cc0332677b204a38fa491ef917a24b9b15",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 10720,
+        "output_tokens": 7411,
+        "total_tokens": 18131,
+        "reasoning_tokens": 4582,
+        "tool_calls_in_response": [
+          "tool_save_plan"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/cea84cfc95a84d7aabb4ca69310b687d.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:56:41.617717+00:00",
+      "ended_at": "2026-07-30T22:57:49.920728+00:00"
+    },
+    {
+      "span_id": "162a1487985d4438",
+      "parent_id": "864cb099c69b4285",
+      "name": "tool:tool_save_plan",
+      "kind": "TOOL",
+      "start_time": 1285300.148942683,
+      "end_time": 1285300.149226825,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_save_plan",
+        "target": "",
+        "stage": "plan",
+        "round": 3
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:49.931109+00:00",
+      "ended_at": "2026-07-30T22:57:49.931392+00:00"
+    },
+    {
+      "span_id": "2b3db54837a740f6",
+      "parent_id": null,
+      "name": "stage2_loop",
+      "kind": "STAGE",
+      "start_time": 1285300.157929052,
+      "end_time": 1285314.775449579,
+      "duration_s": 14.62,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "stage2_loop",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:49.940096+00:00",
+      "ended_at": "2026-07-30T22:58:04.557614+00:00"
+    },
+    {
+      "span_id": "0d9a057e062f4edf",
+      "parent_id": "2b3db54837a740f6",
+      "name": "partitioned_stage2",
+      "kind": "STAGE",
+      "start_time": 1285300.158064673,
+      "end_time": 1285314.775402099,
+      "duration_s": 14.62,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "partitioned_stage2",
+        "workflow": "docgen",
+        "execution_mode": "partitioned",
+        "decision_reason": "eligible",
+        "scope_count": 4,
+        "actual_workers": 4,
+        "plan_item_count": 20,
+        "patch_accepted": 20,
+        "patch_rejected": 0,
+        "conflicted_targets": 0,
+        "fallback_targets": 0,
+        "failed_scope_count": 0,
+        "workers": [
+          {
+            "scope_id": "worker_0",
+            "target_count": 5,
+            "completed_count": 5,
+            "unresolved_count": 0,
+            "llm_calls": 1,
+            "input_tokens": 9336,
+            "output_tokens": 278,
+            "reasoning_tokens": 22,
+            "wall_time_s": 5.479,
+            "retries": 0,
+            "error": null
+          },
+          {
+            "scope_id": "worker_1",
+            "target_count": 5,
+            "completed_count": 5,
+            "unresolved_count": 0,
+            "llm_calls": 1,
+            "input_tokens": 9406,
+            "output_tokens": 328,
+            "reasoning_tokens": 43,
+            "wall_time_s": 6.035,
+            "retries": 0,
+            "error": null
+          },
+          {
+            "scope_id": "worker_2",
+            "target_count": 5,
+            "completed_count": 5,
+            "unresolved_count": 0,
+            "llm_calls": 1,
+            "input_tokens": 9415,
+            "output_tokens": 362,
+            "reasoning_tokens": 18,
+            "wall_time_s": 6.033,
+            "retries": 0,
+            "error": null
+          },
+          {
+            "scope_id": "worker_3",
+            "target_count": 5,
+            "completed_count": 5,
+            "unresolved_count": 0,
+            "llm_calls": 1,
+            "input_tokens": 9558,
+            "output_tokens": 1261,
+            "reasoning_tokens": 677,
+            "wall_time_s": 14.577,
+            "retries": 0,
+            "error": null
+          }
+        ]
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:49.940230+00:00",
+      "ended_at": "2026-07-30T22:58:04.557570+00:00"
+    },
+    {
+      "span_id": "e2972ced25454fa0",
+      "parent_id": null,
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285300.26950634,
+      "end_time": 1285305.609824311,
+      "duration_s": 5.34,
+      "status": "ok",
+      "attributes": {
+        "call_id": "8cdf14e299dc402cbe4d3d30d10eb77d",
+        "stage": "stage2",
+        "round": 1,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v1.5",
+        "bind_tools": true,
+        "call_site": "agent_loop.stage2",
+        "scope": "worker_0",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "36d1b4a1608d6398eb17fed3c845012e15a197343ba8ed856d4066c0faf76cd0",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 9336,
+        "output_tokens": 278,
+        "total_tokens": 9614,
+        "reasoning_tokens": 22,
+        "tool_calls_in_response": [
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/8cdf14e299dc402cbe4d3d30d10eb77d.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:50.051674+00:00",
+      "ended_at": "2026-07-30T22:57:55.391992+00:00"
+    },
+    {
+      "span_id": "e7799c2919d54571",
+      "parent_id": null,
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285300.272919128,
+      "end_time": 1285306.176669081,
+      "duration_s": 5.9,
+      "status": "ok",
+      "attributes": {
+        "call_id": "c865636d11754c528e62667dfc90d55f",
+        "stage": "stage2",
+        "round": 1,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v1.5",
+        "bind_tools": true,
+        "call_site": "agent_loop.stage2",
+        "scope": "worker_2",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "ab797e90b5a2567faed26296ff11e59a2a47401e4967f3554f6073092532b3fc",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 9415,
+        "output_tokens": 362,
+        "total_tokens": 9777,
+        "reasoning_tokens": 18,
+        "tool_calls_in_response": [
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_skip_field"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/c865636d11754c528e62667dfc90d55f.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:50.055085+00:00",
+      "ended_at": "2026-07-30T22:57:55.958834+00:00"
+    },
+    {
+      "span_id": "38a79e4875f34e88",
+      "parent_id": null,
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285300.277523133,
+      "end_time": 1285306.167520261,
+      "duration_s": 5.89,
+      "status": "ok",
+      "attributes": {
+        "call_id": "b83dfae29ac443b092925d74bc9cc882",
+        "stage": "stage2",
+        "round": 1,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v1.5",
+        "bind_tools": true,
+        "call_site": "agent_loop.stage2",
+        "scope": "worker_1",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "9f517013dea0dbfa23e0e0399cabaab05bc4128f935861621cdc722706dd1d9c",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 9406,
+        "output_tokens": 328,
+        "total_tokens": 9734,
+        "reasoning_tokens": 43,
+        "tool_calls_in_response": [
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/b83dfae29ac443b092925d74bc9cc882.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:50.059689+00:00",
+      "ended_at": "2026-07-30T22:57:55.949688+00:00"
+    },
+    {
+      "span_id": "c0ac3db9cb164f22",
+      "parent_id": null,
+      "name": "llm_call",
+      "kind": "LLM",
+      "start_time": 1285300.280860961,
+      "end_time": 1285314.728809054,
+      "duration_s": 14.45,
+      "status": "ok",
+      "attributes": {
+        "call_id": "b9bdbe3c32024362b0c4e38707c9b387",
+        "stage": "stage2",
+        "round": 1,
+        "model": "glm-5.1",
+        "reasoning_effort": "medium",
+        "prompt_version": "v1.5",
+        "bind_tools": true,
+        "call_site": "agent_loop.stage2",
+        "scope": "worker_3",
+        "network_attempts": 1,
+        "attempt_outcomes": [
+          "success"
+        ],
+        "request_digest": "d214c056e05f310b705097dc7f71b23913901a151f6b31c7586376c4edf1f4e9",
+        "execution_source": "live",
+        "bundle_id": null,
+        "occurrence_index": null,
+        "input_tokens": 9558,
+        "output_tokens": 1261,
+        "total_tokens": 10819,
+        "reasoning_tokens": 677,
+        "tool_calls_in_response": [
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field",
+          "tool_update_field"
+        ],
+        "evidence_status": "written",
+        "evidence_ref": "logs/llm_calls/b9bdbe3c32024362b0c4e38707c9b387.json"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:50.063027+00:00",
+      "ended_at": "2026-07-30T22:58:04.510978+00:00"
+    },
+    {
+      "span_id": "894372d5f8e74c4e",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285305.617818947,
+      "end_time": 1285305.617917988,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.399985+00:00",
+      "ended_at": "2026-07-30T22:57:55.400083+00:00"
+    },
+    {
+      "span_id": "0b9a7f52db9b4b76",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285305.617931878,
+      "end_time": 1285305.617960268,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_2",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.400096+00:00",
+      "ended_at": "2026-07-30T22:57:55.400125+00:00"
+    },
+    {
+      "span_id": "c8ec07021d654853",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285305.617968838,
+      "end_time": 1285305.617990068,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_3",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.400134+00:00",
+      "ended_at": "2026-07-30T22:57:55.400155+00:00"
+    },
+    {
+      "span_id": "f6b25451ccd94b3d",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285305.617997028,
+      "end_time": 1285305.618015848,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_4",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.400161+00:00",
+      "ended_at": "2026-07-30T22:57:55.400181+00:00"
+    },
+    {
+      "span_id": "80664bb415364792",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285305.618022788,
+      "end_time": 1285305.618039818,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_5",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.400187+00:00",
+      "ended_at": "2026-07-30T22:57:55.400204+00:00"
+    },
+    {
+      "span_id": "78f6602259a848ef",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.175738379,
+      "end_time": 1285306.175793559,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_6",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.957904+00:00",
+      "ended_at": "2026-07-30T22:57:55.957958+00:00"
+    },
+    {
+      "span_id": "6c8f48d8367d455b",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.175817779,
+      "end_time": 1285306.175846609,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_7",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.957982+00:00",
+      "ended_at": "2026-07-30T22:57:55.958011+00:00"
+    },
+    {
+      "span_id": "e250c3a46aee4fc0",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.175868799,
+      "end_time": 1285306.175894569,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_8",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.958034+00:00",
+      "ended_at": "2026-07-30T22:57:55.958059+00:00"
+    },
+    {
+      "span_id": "473c2f89936d4828",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.175915899,
+      "end_time": 1285306.175940309,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_9",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.958081+00:00",
+      "ended_at": "2026-07-30T22:57:55.958105+00:00"
+    },
+    {
+      "span_id": "883a8122dff04de8",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.175960949,
+      "end_time": 1285306.175984289,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_10",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.958126+00:00",
+      "ended_at": "2026-07-30T22:57:55.958149+00:00"
+    },
+    {
+      "span_id": "15c6567047334f35",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.184288151,
+      "end_time": 1285306.184325471,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_11",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.966453+00:00",
+      "ended_at": "2026-07-30T22:57:55.966490+00:00"
+    },
+    {
+      "span_id": "9492c79bcada48a8",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.184348541,
+      "end_time": 1285306.184375641,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_13",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.966513+00:00",
+      "ended_at": "2026-07-30T22:57:55.966540+00:00"
+    },
+    {
+      "span_id": "374f9612675d440a",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.184397061,
+      "end_time": 1285306.184421921,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_14",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.966562+00:00",
+      "ended_at": "2026-07-30T22:57:55.966587+00:00"
+    },
+    {
+      "span_id": "ea512debfdad452d",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285306.184443271,
+      "end_time": 1285306.184467501,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_15",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.966608+00:00",
+      "ended_at": "2026-07-30T22:57:55.966632+00:00"
+    },
+    {
+      "span_id": "95bd8c3ab74f4edd",
+      "parent_id": null,
+      "name": "tool:tool_skip_field",
+      "kind": "TOOL",
+      "start_time": 1285306.184488521,
+      "end_time": 1285306.184520331,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_skip_field",
+        "target": "指令内容_12",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:57:55.966653+00:00",
+      "ended_at": "2026-07-30T22:57:55.966685+00:00"
+    },
+    {
+      "span_id": "e8f105e5140f442c",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285314.73703126,
+      "end_time": 1285314.73710201,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_16",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.519197+00:00",
+      "ended_at": "2026-07-30T22:58:04.519267+00:00"
+    },
+    {
+      "span_id": "595f7abf35294236",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285314.73711244,
+      "end_time": 1285314.73714094,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_17",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.519277+00:00",
+      "ended_at": "2026-07-30T22:58:04.519305+00:00"
+    },
+    {
+      "span_id": "7c186b56b9b14adc",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285314.73714861,
+      "end_time": 1285314.73717117,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_18",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.519313+00:00",
+      "ended_at": "2026-07-30T22:58:04.519336+00:00"
+    },
+    {
+      "span_id": "4482599425674b99",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285314.73717811,
+      "end_time": 1285314.73719658,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_19",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.519343+00:00",
+      "ended_at": "2026-07-30T22:58:04.519361+00:00"
+    },
+    {
+      "span_id": "e3ce3883e89d4ec1",
+      "parent_id": null,
+      "name": "tool:tool_update_field",
+      "kind": "TOOL",
+      "start_time": 1285314.737203,
+      "end_time": 1285314.7372198,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "tool_name": "tool_update_field",
+        "target": "指令内容_20",
+        "stage": "stage2",
+        "round": 1
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.519367+00:00",
+      "ended_at": "2026-07-30T22:58:04.519384+00:00"
+    },
+    {
+      "span_id": "b96be4dcf3b747bb",
+      "parent_id": null,
+      "name": "wait_match_review",
+      "kind": "STAGE",
+      "start_time": 1285314.793142358,
+      "end_time": 1285314.793166118,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "wait_match_review",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.575309+00:00",
+      "ended_at": "2026-07-30T22:58:04.575331+00:00"
+    },
+    {
+      "span_id": "ef0361ceb6224ab8",
+      "parent_id": null,
+      "name": "generate_document",
+      "kind": "STAGE",
+      "start_time": 1285314.805013237,
+      "end_time": 1285314.845625559,
+      "duration_s": 0.04,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "generate_document",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.587180+00:00",
+      "ended_at": "2026-07-30T22:58:04.627793+00:00"
+    },
+    {
+      "span_id": "64dd37aace79451e",
+      "parent_id": null,
+      "name": "done",
+      "kind": "STAGE",
+      "start_time": 1285314.8525234,
+      "end_time": 1285314.85255801,
+      "duration_s": 0.0,
+      "status": "ok",
+      "attributes": {
+        "stage_name": "done",
+        "workflow": "docgen"
+      },
+      "error": null,
+      "started_at": "2026-07-30T22:58:04.634692+00:00",
+      "ended_at": "2026-07-30T22:58:04.634723+00:00"
+    }
+  ]
+}

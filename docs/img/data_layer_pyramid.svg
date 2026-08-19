@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" font-family="Noto Sans Mono CJK SC, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EA580C"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="620" fill="#FAFAFA"/>
+  <text x="600" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#1F2937">数据分层架构</text>
+
+  <!-- ============ L2 ============ -->
+  <rect x="200" y="60" width="800" height="150" rx="8" fill="#D1FAE5" stroke="#10B981" stroke-width="1.5"/>
+  <text x="600" y="85" text-anchor="middle" font-size="15" font-weight="bold" fill="#065F46">L2 · 经验层</text>
+
+  <rect x="230" y="100" width="350" height="95" rx="6" fill="white" stroke="#10B981" stroke-width="1"/>
+  <text x="405" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#065F46">facts</text>
+  <text x="405" y="138" text-anchor="middle" font-size="10" fill="#374151">workflow / error / finding</text>
+  <text x="405" y="154" text-anchor="middle" font-size="10" fill="#6B7280">带 scenario + topic + confidence</text>
+  <text x="405" y="172" text-anchor="middle" font-size="10" fill="#6B7280">SQLite · FTS + vec</text>
+
+  <rect x="610" y="100" width="350" height="95" rx="6" fill="white" stroke="#10B981" stroke-width="1"/>
+  <text x="785" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#065F46">scene.md (场景口袋书)</text>
+  <text x="785" y="138" text-anchor="middle" font-size="10" fill="#374151">工作流 / 踩坑 / 关键发现 / 演变过程</text>
+  <text x="785" y="154" text-anchor="middle" font-size="10" fill="#6B7280">≤2000字 · ≤15个场景</text>
+  <text x="785" y="172" text-anchor="middle" font-size="10" fill="#6B7280">.md 文件 + SQLite (FTS + vec)</text>
+
+  <!-- 箭头 L1→L2 -->
+  <line x1="600" y1="255" x2="600" y2="215" stroke="#EA580C" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="615" y="240" font-size="10" fill="#9A3412">累积 ≥3 条 fact → LLM 重写 scene.md</text>
+
+  <!-- ============ L1 ============ -->
+  <rect x="120" y="260" width="960" height="170" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="600" y="285" text-anchor="middle" font-size="15" font-weight="bold" fill="#92400E">L1 · 派生层</text>
+
+  <rect x="150" y="300" width="210" height="115" rx="6" fill="white" stroke="#F59E0B" stroke-width="1"/>
+  <text x="255" y="322" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400E">doc_chunk</text>
+  <text x="255" y="340" text-anchor="middle" font-size="9" fill="#374151">文档切片</text>
+  <text x="255" y="355" text-anchor="middle" font-size="9" fill="#6B7280">parent + child</text>
+  <text x="255" y="370" text-anchor="middle" font-size="9" fill="#6B7280">SQLite · FTS + vec</text>
+  <text x="255" y="385" text-anchor="middle" font-size="9" fill="#6B7280">search(docs) → get()</text>
+
+  <rect x="380" y="300" width="210" height="115" rx="6" fill="white" stroke="#F59E0B" stroke-width="1"/>
+  <text x="485" y="322" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400E">code_graph</text>
+  <text x="485" y="340" text-anchor="middle" font-size="9" fill="#374151">符号 + 调用边 + 文件</text>
+  <text x="485" y="355" text-anchor="middle" font-size="9" fill="#6B7280">code_nodes / edges / files</text>
+  <text x="485" y="370" text-anchor="middle" font-size="9" fill="#6B7280">SQLite · FTS (符号名)</text>
+  <text x="485" y="385" text-anchor="middle" font-size="9" fill="#6B7280">explore / callers / impact</text>
+
+  <rect x="610" y="300" width="210" height="115" rx="6" fill="white" stroke="#F59E0B" stroke-width="1"/>
+  <text x="715" y="322" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400E">code_wiki.md</text>
+  <text x="715" y="340" text-anchor="middle" font-size="9" fill="#374151">仓库整体概览</text>
+  <text x="715" y="355" text-anchor="middle" font-size="9" fill="#6B7280">模块/函数/调用关系</text>
+  <text x="715" y="370" text-anchor="middle" font-size="9" fill="#6B7280">.md + SQLite (FTS+vec)</text>
+  <text x="715" y="385" text-anchor="middle" font-size="9" fill="#6B7280">search(code) → get()</text>
+
+  <rect x="840" y="300" width="210" height="115" rx="6" fill="white" stroke="#F59E0B" stroke-width="1"/>
+  <text x="945" y="322" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400E">trace</text>
+  <text x="945" y="340" text-anchor="middle" font-size="9" fill="#374151">session 叙事摘要</text>
+  <text x="945" y="355" text-anchor="middle" font-size="9" fill="#6B7280">steps + errors + keywords</text>
+  <text x="945" y="370" text-anchor="middle" font-size="9" fill="#6B7280">JSON + SQLite (FTS+vec)</text>
+  <text x="945" y="385" text-anchor="middle" font-size="9" fill="#6B7280">L2 抽 facts 的原料</text>
+
+  <!-- 箭头 L0→L1 -->
+  <line x1="600" y1="480" x2="600" y2="435" stroke="#EA580C" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="615" y="462" font-size="10" fill="#9A3412">DocChunkDeriver / tree-sitter / TraceDeriver</text>
+
+  <!-- ============ L0 ============ -->
+  <rect x="200" y="485" width="800" height="115" rx="8" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="600" y="510" text-anchor="middle" font-size="15" font-weight="bold" fill="#1E40AF">L0 · 原始层 (append-only)</text>
+
+  <rect x="230" y="522" width="230" height="65" rx="6" fill="white" stroke="#3B82F6" stroke-width="1"/>
+  <text x="345" y="542" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E40AF">doc</text>
+  <text x="345" y="558" text-anchor="middle" font-size="9" fill="#6B7280">原始文件 (xlsx/pdf) + md</text>
+  <text x="345" y="572" text-anchor="middle" font-size="9" fill="#6B7280">文件系统</text>
+
+  <rect x="485" y="522" width="230" height="65" rx="6" fill="white" stroke="#3B82F6" stroke-width="1"/>
+  <text x="600" y="542" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E40AF">code</text>
+  <text x="600" y="558" text-anchor="middle" font-size="9" fill="#6B7280">全量代码仓库拷贝</text>
+  <text x="600" y="572" text-anchor="middle" font-size="9" fill="#6B7280">文件系统</text>
+
+  <rect x="740" y="522" width="230" height="65" rx="6" fill="white" stroke="#3B82F6" stroke-width="1"/>
+  <text x="855" y="542" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E40AF">session</text>
+  <text x="855" y="558" text-anchor="middle" font-size="9" fill="#6B7280">事件流 (一session一jsonl)</text>
+  <text x="855" y="572" text-anchor="middle" font-size="9" fill="#6B7280">文件系统</text>
+
+  <text x="600" y="616" text-anchor="middle" font-size="10" fill="#6B7280">L0 元数据 (路径/hash/派生状态) 存 SQLite l0_records</text>
+
+</svg>

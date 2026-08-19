@@ -1,0 +1,15 @@
+{
+  "output_path": "outputs_eval/exp-016-tc03-react-evidence-fix/template_template_输出_20260731_065804.docx",
+  "fields_report": {
+    "attempted": 19,
+    "success": 19,
+    "failed": 0,
+    "failures": []
+  },
+  "tables_report": {
+    "attempted": 0,
+    "success": 0,
+    "failed": 0,
+    "failures": []
+  }
+}

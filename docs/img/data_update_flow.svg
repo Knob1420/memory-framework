@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" font-family="Noto Sans Mono CJK SC, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#374151"/>
+    </marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3AED"/>
+    </marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#DC2626"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="780" fill="#FAFAFA"/>
+  <text x="600" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1F2937">数据更新流程</text>
+
+  <!-- ═══════════════ 层 1: L0 入库 ═══════════════ -->
+  <rect x="40" y="55" width="1120" height="110" rx="8" fill="#DBEAFE" opacity="0.4"/>
+  <text x="60" y="78" font-size="13" font-weight="bold" fill="#1E40AF">① L0 入库 (实时 / 手动触发)</text>
+
+  <rect x="60" y="90" width="340" height="60" rx="6" fill="white" stroke="#3B82F6"/>
+  <text x="230" y="110" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E40AF">session 事件流</text>
+  <text x="230" y="126" text-anchor="middle" font-size="9" fill="#6B7280">plugin/callback → /events → session_raw.jsonl</text>
+  <text x="230" y="140" text-anchor="middle" font-size="9" fill="#6B7280">实时 · 毫秒级</text>
+
+  <rect x="430" y="90" width="340" height="60" rx="6" fill="white" stroke="#3B82F6"/>
+  <text x="600" y="110" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E40AF">doc 参考文档</text>
+  <text x="600" y="126" text-anchor="middle" font-size="9" fill="#6B7280">/ingest_doc → 原始文件 + md 转换</text>
+  <text x="600" y="140" text-anchor="middle" font-size="9" fill="#6B7280">手动 · 按需</text>
+
+  <rect x="800" y="90" width="340" height="60" rx="6" fill="white" stroke="#3B82F6"/>
+  <text x="970" y="110" text-anchor="middle" font-size="11" font-weight="bold" fill="#1E40AF">code 代码仓库</text>
+  <text x="970" y="126" text-anchor="middle" font-size="9" fill="#6B7280">/ingest_code → 全量拷贝 + hash</text>
+  <text x="970" y="140" text-anchor="middle" font-size="9" fill="#6B7280">手动 · 增量对比</text>
+
+  <!-- 箭头 L0→L1 -->
+  <line x1="600" y1="170" x2="600" y2="195" stroke="#374151" stroke-width="2" marker-end="url(#a)"/>
+  <text x="615" y="188" font-size="9" fill="#374151">异步入队</text>
+
+  <!-- ═══════════════ 层 2: L1 派生 ═══════════════ -->
+  <rect x="40" y="200" width="1120" height="130" rx="8" fill="#FEF3C7" opacity="0.4"/>
+  <text x="60" y="223" font-size="13" font-weight="bold" fill="#92400E">② L1 派生 (异步)</text>
+
+  <rect x="60" y="235" width="250" height="80" rx="6" fill="white" stroke="#F59E0B"/>
+  <text x="185" y="255" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400E">TraceDeriver</text>
+  <text x="185" y="272" text-anchor="middle" font-size="9" fill="#6B7280">session_raw → trace</text>
+  <text x="185" y="286" text-anchor="middle" font-size="9" fill="#6B7280">LLM 提炼 (steps + errors)</text>
+  <text x="185" y="300" text-anchor="middle" font-size="9" fill="#6B7280">session.idle 触发</text>
+
+  <rect x="340" y="235" width="250" height="80" rx="6" fill="white" stroke="#F59E0B"/>
+  <text x="465" y="255" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400E">DocChunkDeriver</text>
+  <text x="465" y="272" text-anchor="middle" font-size="9" fill="#6B7280">doc md → doc_chunk</text>
+  <text x="465" y="286" text-anchor="middle" font-size="9" fill="#6B7280">切片 + summary + embed</text>
+  <text x="465" y="300" text-anchor="middle" font-size="9" fill="#6B7280">入库时触发</text>
+
+  <rect x="620" y="235" width="250" height="80" rx="6" fill="white" stroke="#F59E0B"/>
+  <text x="745" y="255" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400E">CodeGraphBuilder</text>
+  <text x="745" y="272" text-anchor="middle" font-size="9" fill="#6B7280">code → 符号 + 边 + 文件</text>
+  <text x="745" y="286" text-anchor="middle" font-size="9" fill="#6B7280">tree-sitter 解析</text>
+  <text x="745" y="300" text-anchor="middle" font-size="9" fill="#6B7280">增量: hash 变化的文件</text>
+
+  <rect x="900" y="235" width="250" height="80" rx="6" fill="white" stroke="#F59E0B"/>
+  <text x="1025" y="255" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400E">CodeWikiDeriver</text>
+  <text x="1025" y="272" text-anchor="middle" font-size="9" fill="#6B7280">code → code_wiki.md</text>
+  <text x="1025" y="286" text-anchor="middle" font-size="9" fill="#6B7280">LLM 生成仓库概览</text>
+  <text x="1025" y="300" text-anchor="middle" font-size="9" fill="#6B7280">CodeGraph 建完后触发</text>
+
+  <!-- 箭头 L1(trace)→L2 -->
+  <line x1="185" y1="320" x2="185" y2="345" stroke="#374151" stroke-width="2" marker-end="url(#a)"/>
+  <text x="200" y="338" font-size="9" fill="#374151">trace 就绪 → 链式触发</text>
+
+  <!-- ═══════════════ 层 3: L2 抽取 ═══════════════ -->
+  <rect x="40" y="350" width="1120" height="110" rx="8" fill="#FED7AA" opacity="0.4"/>
+  <text x="60" y="373" font-size="13" font-weight="bold" fill="#7C2D12">③ L2 facts 抽取 + 去重 (异步)</text>
+
+  <rect x="60" y="385" width="520" height="60" rx="6" fill="white" stroke="#EA580C"/>
+  <text x="320" y="405" text-anchor="middle" font-size="10" font-weight="bold" fill="#7C2D12">L2Extractor (LLM)</text>
+  <text x="320" y="420" text-anchor="middle" font-size="9" fill="#6B7280">trace → facts (workflow / error / finding)</text>
+  <text x="320" y="434" text-anchor="middle" font-size="9" fill="#6B7280">每条带 scenario + topic + confidence</text>
+
+  <rect x="610" y="385" width="530" height="60" rx="6" fill="white" stroke="#EA580C"/>
+  <text x="875" y="405" text-anchor="middle" font-size="10" font-weight="bold" fill="#7C2D12">Fact Dedup (去重)</text>
+  <text x="875" y="420" text-anchor="middle" font-size="9" fill="#6B7280">embedding 搜相似 → LLM 判断 skip/update/merge</text>
+  <text x="875" y="434" text-anchor="middle" font-size="9" fill="#6B7280">同 workspace + scenario + type 范围内</text>
+
+  <!-- 箭头 L2→scene -->
+  <line x1="600" y1="465" x2="600" y2="490" stroke="#7C3AED" stroke-width="2" marker-end="url(#ap)"/>
+  <text x="615" y="483" font-size="9" fill="#5B21B6">同场景 facts 累积 ≥3</text>
+
+  <!-- ═══════════════ 层 4: scene.md 更新 ═══════════════ -->
+  <rect x="40" y="495" width="1120" height="100" rx="8" fill="#EDE9FE" opacity="0.4"/>
+  <text x="60" y="518" font-size="13" font-weight="bold" fill="#5B21B6">④ scene.md 更新 (周期触发)</text>
+
+  <rect x="60" y="530" width="1080" height="55" rx="6" fill="white" stroke="#7C3AED"/>
+  <text x="600" y="550" text-anchor="middle" font-size="10" font-weight="bold" fill="#5B21B6">SceneUpdater (LLM)</text>
+  <text x="600" y="565" text-anchor="middle" font-size="9" fill="#6B7280">读 (现有 scene.md + 该场景全部 facts) → 重写 scene.md (工作流/踩坑/关键发现/演变过程) → ≤2000字 → 写.md + 同步 SQLite</text>
+
+  <!-- 箭头 scene→通用 -->
+  <line x1="600" y1="600" x2="600" y2="625" stroke="#7C3AED" stroke-width="2" marker-end="url(#ap)"/>
+  <text x="615" y="618" font-size="9" fill="#5B21B6">月级跨场景扫描</text>
+
+  <!-- ═══════════════ 层 5: 通用升级 ═══════════════ -->
+  <rect x="40" y="630" width="1120" height="80" rx="8" fill="#FEE2E2" opacity="0.4"/>
+  <text x="60" y="653" font-size="13" font-weight="bold" fill="#991B1B">⑤ 跨场景升级 (月级)</text>
+
+  <rect x="60" y="662" width="1080" height="40" rx="6" fill="white" stroke="#DC2626"/>
+  <text x="600" y="678" text-anchor="middle" font-size="9" fill="#991B1B">扫描所有场景 facts → 发现跨场景相似 (embedding > 0.85) → LLM 判断是否通用 → 合并为通用 fact → 删原 2 条 → 标记 affected scene.md 为脏</text>
+  <text x="600" y="692" text-anchor="middle" font-size="9" fill="#991B1B">下次 scene.md 重写时自然更新 (旧场景不含移走的, 通用场景含新增的)</text>
+
+  <!-- 右侧 confidence 说明 -->
+  <rect x="680" y="720" width="480" height="50" rx="6" fill="white" stroke="#E5E7EB"/>
+  <text x="690" y="740" font-size="9" font-weight="bold" fill="#374151">confidence = sample×0.4 + LLM×0.3 + HITL×0.2 + 使用×0.1</text>
+  <text x="690" y="755" font-size="9" fill="#6B7280">sample: 验证次数 | LLM: 抽取自评 | HITL: 用户反馈 | 使用: recall命中+任务结果</text>
+
+</svg>

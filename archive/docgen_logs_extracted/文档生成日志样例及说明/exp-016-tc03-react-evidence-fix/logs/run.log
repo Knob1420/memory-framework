@@ -1,0 +1,70 @@
+2026-07-31 06:55:48,683 workflow.generic_runner INFO normalized template: evaluation_dataset/TC-03/template.docx → outputs_eval/exp-016-tc03-react-evidence-fix/uploads/template_template.docx
+2026-07-31 06:55:48,695 workflow.generic_runner INFO normalized 2 reference files into uploads/
+2026-07-31 06:55:48,777 workflow.generic_runner INFO resume: workflow=docgen stage=wait_parse_review action={'action': 'confirm'}
+2026-07-31 06:55:48,800 workflow.generic_runner INFO resume dispatched: action=confirm next_stage_index=2 next_stage=extract_reference
+2026-07-31 06:55:48,862 workflow.generic_runner INFO resume: workflow=docgen stage=wait_extraction_rules action={'action': 'confirm', 'extraction_rules': ''}
+2026-07-31 06:55:48,879 workflow.generic_runner INFO resume dispatched: action=confirm next_stage_index=4 next_stage=summary
+2026-07-31 06:55:58,985 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:55:58,985 workflow.agent_loop INFO [2026-07-31 06:55:58] summary R1 (effort=medium) 输入: 2 条消息, 9064 字符
+2026-07-31 06:55:58,986 workflow.agent_loop INFO ============================================================
+2026-07-31 06:55:58,986 workflow.agent_loop INFO   [0] SystemMessage: 9054 字
+2026-07-31 06:55:58,987 workflow.agent_loop INFO   [1] HumanMessage: 10 字
+2026-07-31 06:55:58,989 workflow.llm_resilience INFO [llm_resilience summary R1]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:56:09,811 workflow.agent_loop INFO   [summary R1] 耗时: 10.8s | tokens: 5997in/880out/6877total | 回复: 156字 | 流式chunks: 93 | tools: ['tool_query_reference']
+2026-07-31 06:56:09,825 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:56:09,826 workflow.agent_loop INFO [2026-07-31 06:56:09] summary R2 (effort=medium) 输入: 4 条消息, 14599 字符
+2026-07-31 06:56:09,826 workflow.agent_loop INFO ============================================================
+2026-07-31 06:56:09,826 workflow.agent_loop INFO   [0] SystemMessage: 9054 字
+2026-07-31 06:56:09,827 workflow.agent_loop INFO   [1] AIMessage: 156 字 tool_calls=[tool_query_reference]
+2026-07-31 06:56:09,827 workflow.agent_loop INFO   [2] ToolMessage: 5379 字
+2026-07-31 06:56:09,828 workflow.agent_loop INFO   [3] HumanMessage: 10 字
+2026-07-31 06:56:09,830 workflow.llm_resilience INFO [llm_resilience summary R2]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:56:41,583 workflow.agent_loop INFO   [summary R2] 耗时: 31.8s | tokens: 9153in/4524out/13677total | 回复: 69字 | 流式chunks: 44 | tools: ['tool_save_reference_summary']
+2026-07-31 06:56:41,612 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:56:41,613 workflow.agent_loop INFO [2026-07-31 06:56:41] plan R1 (effort=medium) 输入: 6 条消息, 19455 字符
+2026-07-31 06:56:41,613 workflow.agent_loop INFO ============================================================
+2026-07-31 06:56:41,614 workflow.agent_loop INFO   [0] SystemMessage: 13832 字
+2026-07-31 06:56:41,615 workflow.agent_loop INFO   [1] AIMessage: 156 字 tool_calls=[tool_query_reference]
+2026-07-31 06:56:41,615 workflow.agent_loop INFO   [2] ToolMessage: 5379 字
+2026-07-31 06:56:41,616 workflow.agent_loop INFO   [3] AIMessage: 69 字 tool_calls=[tool_save_reference_summary]
+2026-07-31 06:56:41,616 workflow.agent_loop INFO   [4] ToolMessage: 9 字
+2026-07-31 06:56:41,617 workflow.agent_loop INFO   [5] HumanMessage: 10 字
+2026-07-31 06:56:41,619 workflow.llm_resilience INFO [llm_resilience plan R1]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:57:49,920 workflow.agent_loop INFO   [plan R1] 耗时: 68.3s | tokens: 10720in/7411out/18131total | 回复: 429字 | 流式chunks: 256 | tools: ['tool_save_plan']
+2026-07-31 06:57:50,019 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:57:50,025 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:57:50,031 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:57:50,031 workflow.agent_loop INFO [2026-07-31 06:57:50] stage2 R1 (effort=medium) 输入: 2 条消息, 14040 字符
+2026-07-31 06:57:50,042 workflow.agent_loop INFO [2026-07-31 06:57:50] stage2 R1 (effort=medium) 输入: 2 条消息, 14198 字符
+2026-07-31 06:57:50,042 workflow.agent_loop INFO [2026-07-31 06:57:50] stage2 R1 (effort=medium) 输入: 2 条消息, 14182 字符
+2026-07-31 06:57:50,047 workflow.agent_loop INFO 
+============================================================
+2026-07-31 06:57:50,048 workflow.agent_loop INFO ============================================================
+2026-07-31 06:57:50,048 workflow.agent_loop INFO ============================================================
+2026-07-31 06:57:50,048 workflow.agent_loop INFO ============================================================
+2026-07-31 06:57:50,048 workflow.agent_loop INFO [2026-07-31 06:57:50] stage2 R1 (effort=medium) 输入: 2 条消息, 14520 字符
+2026-07-31 06:57:50,049 workflow.agent_loop INFO   [0] SystemMessage: 14030 字
+2026-07-31 06:57:50,049 workflow.agent_loop INFO   [0] SystemMessage: 14188 字
+2026-07-31 06:57:50,049 workflow.agent_loop INFO   [0] SystemMessage: 14172 字
+2026-07-31 06:57:50,049 workflow.agent_loop INFO ============================================================
+2026-07-31 06:57:50,050 workflow.agent_loop INFO   [1] HumanMessage: 10 字
+2026-07-31 06:57:50,051 workflow.agent_loop INFO   [0] SystemMessage: 14510 字
+2026-07-31 06:57:50,051 workflow.agent_loop INFO   [1] HumanMessage: 10 字
+2026-07-31 06:57:50,051 workflow.agent_loop INFO   [1] HumanMessage: 10 字
+2026-07-31 06:57:50,054 workflow.llm_resilience INFO [llm_resilience stage2 R1]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:57:50,057 workflow.agent_loop INFO   [1] HumanMessage: 10 字
+2026-07-31 06:57:50,061 workflow.llm_resilience INFO [llm_resilience stage2 R1]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:57:50,068 workflow.llm_resilience INFO [llm_resilience stage2 R1]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:57:50,072 workflow.llm_resilience INFO [llm_resilience stage2 R1]: attempt 1/2 (timeout=600.0s, remaining_budget=900.0s)
+2026-07-31 06:57:55,392 workflow.agent_loop INFO   [stage2 R1] 耗时: 5.3s | tokens: 9336in/278out/9614total | 回复: 40字 | 流式chunks: 22 | tools: ['tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field']
+2026-07-31 06:57:55,949 workflow.agent_loop INFO   [stage2 R1] 耗时: 5.9s | tokens: 9406in/328out/9734total | 回复: 42字 | 流式chunks: 25 | tools: ['tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field']
+2026-07-31 06:57:55,958 workflow.agent_loop INFO   [stage2 R1] 耗时: 5.9s | tokens: 9415in/362out/9777total | 回复: 48字 | 流式chunks: 25 | tools: ['tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_skip_field']
+2026-07-31 06:58:04,511 workflow.agent_loop INFO   [stage2 R1] 耗时: 14.4s | tokens: 9558in/1261out/10819total | 回复: 222字 | 流式chunks: 128 | tools: ['tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field', 'tool_update_field']
+2026-07-31 06:58:04,586 workflow.generic_runner INFO resume: workflow=docgen stage=wait_match_review action={'action': 'confirm'}
+2026-07-31 06:58:04,586 workflow.generic_runner INFO resume dispatched: action=confirm next_stage_index=8 next_stage=generate_document

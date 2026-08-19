@@ -1,0 +1,17 @@
+{
+  "reference_docs": [
+    {
+      "markdown_path": "<project_root>/outputs_eval/exp-016-tc03-react-evidence-fix/working/微纳智算机遥测控数据表.md",
+      "content_length": 32325,
+      "original_type": "xlsx",
+      "original_path": "outputs_eval/exp-016-tc03-react-evidence-fix/uploads/微纳智算机遥测控数据表.xlsx"
+    },
+    {
+      "markdown_path": "<project_root>/outputs_eval/exp-016-tc03-react-evidence-fix/working/魔方指令表.md",
+      "content_length": 3676,
+      "original_type": "xlsx",
+      "original_path": "outputs_eval/exp-016-tc03-react-evidence-fix/uploads/魔方指令表.xlsx"
+    }
+  ],
+  "source_ref_mapping": {}
+}
