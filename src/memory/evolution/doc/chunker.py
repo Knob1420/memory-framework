@@ -26,8 +26,8 @@ from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
 )
 
-from memory.ingestion.doc_clean import clean_text, is_low_quality_content
-from memory.ingestion.doc_models import (
+from memory.evolution.doc.clean import clean_text, is_low_quality_content
+from memory.evolution.doc.models import (
     ChildDocument,
     Document,
 )

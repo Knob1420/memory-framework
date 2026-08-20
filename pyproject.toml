@@ -42,7 +42,7 @@ testpaths = ["tests"]
 
 [tool.ruff.lint.per-file-ignores]
 # rag-clean 移植件：保持原样少 diff，不追新式类型标注
-"src/memory/ingestion/doc_chunk.py" = ["UP006", "UP035", "UP045", "RUF012", "BLE001", "I001", "F401"]
-"src/memory/ingestion/doc_models.py" = ["UP006", "UP035", "UP045", "RUF012", "I001"]
-"src/memory/ingestion/doc_clean.py" = ["UP006", "UP035", "UP045", "RUF012", "BLE001", "SIM103"]
-"src/memory/ingestion/doc_extract.py" = ["BLE001", "UP045", "PLW1510"]
+"src/memory/evolution/doc/chunker.py" = ["UP006", "UP035", "UP045", "RUF012", "BLE001", "I001", "F401"]
+"src/memory/evolution/doc/models.py" = ["UP006", "UP035", "UP045", "RUF012", "I001"]
+"src/memory/evolution/doc/clean.py" = ["UP006", "UP035", "UP045", "RUF012", "BLE001", "SIM103"]
+"src/memory/evolution/doc/extract.py" = ["BLE001", "UP045", "PLW1510"]

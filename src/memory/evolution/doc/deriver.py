@@ -8,8 +8,8 @@ LLM 摘要等链 B 的 llm/schema 补全后再挂。
 import logging
 from pathlib import Path
 
-from memory.ingestion.doc_chunk import SmartChunker
-from memory.ingestion.doc_extract import convert_to_markdown
+from memory.evolution.doc.chunker import SmartChunker
+from memory.evolution.doc.extract import convert_to_markdown
 from memory.llm.client import LLMClient
 from memory.storage.engine import Chunk, L0Record, Storage
 

@@ -6,7 +6,7 @@ FakeLLM 提供向量（无 key 可测）；分块/清洗/提取是 rag-clean 移
 import pytest
 
 from memory.config import Config
-from memory.evolution.doc_deriver import derive_doc
+from memory.evolution.doc.deriver import derive_doc
 from memory.llm.client import FakeLLM
 from memory.storage.engine import Storage
 
