@@ -63,7 +63,7 @@ async def otlp_traces(request: Request) -> Response:
     try:
         if request.headers.get("content-type", "").startswith("application/json"):
             req = ParseDict(_fix_ids(json.loads(body)), ExportTraceServiceRequest())
-        else:  # protobuf（OTLP 默认）
+        else:  # protobuf（OTLP 默认）——TODO(P0收尾): 无真实样例，protobuf路径未测，拿到后验证
             req = ExportTraceServiceRequest.FromString(body)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"OTLP 解析失败: {e}") from e
