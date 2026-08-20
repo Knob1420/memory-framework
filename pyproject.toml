@@ -10,6 +10,11 @@ dependencies = [
     "openai>=1.40",
     "pyyaml>=6.0",
     "python-dotenv>=1.0",
+    "opentelemetry-proto>=1.44.0",
+    "psycopg[binary]>=3.3.4",
+    "python-multipart>=0.0.32",
+    "langchain-core>=1.6.0",
+    "langchain-text-splitters>=1.1.2",
 ]
 
 [dependency-groups]
@@ -34,3 +39,10 @@ extend-exclude = ["archive"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# rag-clean 移植件：保持原样少 diff，不追新式类型标注
+"src/memory/ingestion/doc_chunk.py" = ["UP006", "UP035", "UP045", "RUF012", "BLE001", "I001", "F401"]
+"src/memory/ingestion/doc_models.py" = ["UP006", "UP035", "UP045", "RUF012", "I001"]
+"src/memory/ingestion/doc_clean.py" = ["UP006", "UP035", "UP045", "RUF012", "BLE001", "SIM103"]
+"src/memory/ingestion/doc_extract.py" = ["BLE001", "UP045", "PLW1510"]

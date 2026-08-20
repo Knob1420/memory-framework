@@ -1,3 +1,10 @@
-# P0：只要 workspace 名单（编排门注册表）。
-# P1 起长成组件注册表（见 docs/contracts/components.md 的 yaml 结构）。
+# P0：workspace 名单（编排门注册表）+ Phoenix 同步配置。
+# P1 起名单长成组件注册表（见 docs/contracts/components.md 的 yaml 结构）。
 workspaces: [codegen, docgen]
+
+# Phoenix 同步（拉型采集，docgen 数据源）。dsn 为空则不启动。
+# 拿到只读账号后填：postgres://memory_reader:xxx@<host>:5432/<dbname>
+phoenix:
+  dsn: ""
+  interval_s: 300
+  start_from: all    # all=吃历史（facts 冷启动原料） | now=只收新的

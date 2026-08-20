@@ -34,6 +34,12 @@ class Config:
     # workspace 注册表（编排门消费）。ponytail: P0 只有名单，P1 升级为组件注册 dict
     workspaces: list[str] = field(default_factory=list)
 
+    # Phoenix 同步（拉型采集，docgen 数据源）。dsn 为空则不启动。
+    phoenix_dsn: str = field(default_factory=lambda: os.environ.get("PHOENIX_DSN", ""))
+    phoenix_workspace: str = "docgen"
+    phoenix_interval_s: int = 300
+    phoenix_start_from: str = "all"  # all=吃历史 | now=只收新的
+
 
 def load_config() -> Config:
     """yaml 打底，环境变量优先。"""
@@ -42,4 +48,9 @@ def load_config() -> Config:
         raw = yaml.safe_load(_CONFIG_PATH.read_text(encoding="utf-8")) or {}
         if isinstance(raw.get("workspaces"), list):
             cfg.workspaces = raw["workspaces"]
+        if isinstance(raw.get("phoenix"), dict):
+            p = raw["phoenix"]
+            cfg.phoenix_dsn = p.get("dsn", cfg.phoenix_dsn)
+            cfg.phoenix_interval_s = int(p.get("interval_s", cfg.phoenix_interval_s))
+            cfg.phoenix_start_from = str(p.get("start_from", cfg.phoenix_start_from))
     return cfg

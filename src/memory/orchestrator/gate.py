@@ -7,7 +7,12 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-EXEMPT_PATHS = {"/health", "/docs", "/openapi.json"}  # 免检清单
+EXEMPT_PATHS = {
+    "/health",
+    "/docs",
+    "/openapi.json",
+    "/otlp/v1/traces",
+}  # 免检清单（OTLP 无 X-Workspace 头，receiver 自查）
 
 
 def workspace_gate(workspaces: list[str]):

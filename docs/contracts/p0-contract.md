@@ -154,18 +154,27 @@ class L0Record:
 
 ---
 
-## §5 OTLP receiver（docgen/langgraph 数据接入）
+## §5 OTLP receiver（push 型，已实现、待命）
 
-docgen 侧统一 OTel 格式 + OTel SDK 传输，memory 侧表现为一个标准 OTLP 后端。
+docgen 侧统一 OTel 格式 + OTel SDK 传输。**当前实际接入走拉型（见下）**，receiver
+在对方配 collector 或 SDK 直发时启用——两路产出同一信封，汇于同一 store_events。
 
-### 链路与 docgen 侧配置
+### 链路（push 型启用时）
 
 ```
-docgen (OTel SDK) → OTLP → docgen 的 Collector ──→ 自己的日志后端
-                                    └──exporter──→ memory POST /otlp/v1/traces
+docgen (OTel SDK) → OTLP → collector → Phoenix（他们现有观测后端，是 sink 不转发）
+                              └──exporter──→ memory POST /otlp/v1/traces
 ```
 
-docgen 侧接入的全部代价 = collector 加一段 exporter（指向 memory 地址）。
+### 当前实际链路：Phoenix 同步器（拉型）
+
+```
+docgen SDK ──OTLP/protobuf──→ Phoenix（postgres 库）←── 只读账号，每5分钟拉
+                                     └────────→ PhoenixSyncer → 信封 → store_events
+```
+
+docgen 侧成本 = 一个只读数据库账号。规则：只导含 done 的完整 trace、按 trace_id
+全量一次导入；水位存 data/<ws>/phoenix_sync.json（last_id + incomplete 名单）。
 
 ### 端点
 
@@ -211,7 +220,7 @@ receiver 属于 transport 层：只做协议解析 + 翻译 + 调 ingestion，
 ```
 插件(或 curl 模拟)推一批事件 → /events → {stored:N, duplicates:0}
 重发同一批                     → /events → {stored:0, duplicates:N}
-最后一批含 session_end         → data/l0/session/<id>.jsonl 48 行
+最后一批含 session_end         → data/<ws>/l0/session/<id>.jsonl 48 行
                                 + l0_records 出现一行 pending
 /ingest_doc 上传同一文件两次   → 第二次 hash_hit=true
 OTLP/JSON 样例 trace 发 receiver → 同样落成 jsonl + pending（与 /events 产物同构）

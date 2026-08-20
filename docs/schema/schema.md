@@ -22,10 +22,10 @@ CREATE TABLE l0_records (
     id            TEXT PRIMARY KEY,     -- uuid
     type          TEXT NOT NULL,        -- 'doc' | 'code' | 'session'
     workspace     TEXT NOT NULL,
-    path          TEXT NOT NULL,        -- 本体位置:
-                                        --   doc: data/l0/doc/<id>/原始文件
-                                        --   code: data/l0/code/<id>/仓库拷贝
-                                        --   session: data/l0/session/<id>.jsonl
+    path          TEXT NOT NULL,        -- 本体位置(data 按 workspace 一级分目录):
+                                        --   doc: data/<ws>/l0/doc/<id>/原始文件
+                                        --   code: data/<ws>/l0/code/<id>/仓库拷贝
+                                        --   session: data/<ws>/l0/session/<id>.jsonl
     content_hash  TEXT,                 -- doc/code 有；session append-only 不去重
     meta          TEXT,                 -- JSON: 文件名/大小/prompt_version 等开放字段
     derived_state TEXT DEFAULT 'pending', -- pending | derived | failed
@@ -201,7 +201,7 @@ CREATE TABLE scenes (
     PRIMARY KEY (workspace, name)
 );
 -- 影子: scenes_fts(summary, workspace) + vec
--- 文件位置: data/scenes/<workspace>/<name>.md，≤2000 字，每 workspace ≤15 个
+-- 文件位置: data/<ws>/scenes/<name>.md，≤2000 字，每 workspace ≤15 个
 ```
 
 ---

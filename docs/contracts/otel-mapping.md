@@ -1,7 +1,8 @@
 # OTel span → 事件信封映射规则
 
-> **消费者：OTLP receiver（P0）**。翻译结果是统一事件信封（见 http-api.md 事件信封一节）。
-> 历史 run 的 trace.json 离线导入（如有）复用同一规则，不允许另行实现。
+> **消费者：OTLP receiver（push 型）与 Phoenix 同步器（拉型，当前实际路径）**。
+> 翻译结果是统一事件信封（见 http-api.md 事件信封一节）。
+> 统一实现位于 src/memory/ingestion/span_map.py，两个适配器喂数据，不允许第三份实现。
 
 ## 结构映射（五条）
 
@@ -33,8 +34,11 @@
 ## 接入拓扑
 
 ```
-docgen SDK → OTLP → docgen 的 Collector →（exporter 加一段）→ memory /otlp/v1/traces
+当前（拉型）: docgen SDK → OTLP/protobuf → Phoenix(postgres) ←只读─ PhoenixSyncer(每5min)
+备选（push）: docgen SDK → OTLP → collector →┬→ Phoenix
+                                             └→ memory /otlp/v1/traces（receiver）
 ```
 
-memory 侧表现为一个标准 OTLP 后端；正文支持 protobuf（默认）与 OTLP/JSON 两种编码，
-按 Content-Type 分流。protobuf 解析用官方 `opentelemetry-proto` 包（P4 加入依赖）。
+receiver 正文支持 protobuf（默认）与 OTLP/JSON 两种编码，按 Content-Type 分流
+（JSON 路径注意 hex/base64 坑，见 receiver `_fix_ids`）。protobuf 解析用官方
+`opentelemetry-proto` 包。

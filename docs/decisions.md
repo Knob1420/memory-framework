@@ -21,3 +21,12 @@
   源异构（TS 插件走 JSON）+ 消费者是 LLM（信封比 OTel 嵌套结构省 4 倍 token），故信封为枢纽、
   OTel 为边界协议（防腐层：外部标准改版只改映射表一处，不冲击演化引擎）。若所有源永远 OTel
   且消费者是链路追踪系统，则应反过来。
+- 2026-08-18 data/ 一级按 workspace 物理分目录（data/<ws>/l0/...），SQLite 仍单库+workspace 列：
+  物理树便于按 workspace 导出/清理/看磁盘占用，逻辑列保证查询隔离；归属真源仍是表里的 path 列。
+  （推翻此前"文件目录不按 workspace 分"的表述。）
+- 2026-08-20 docgen 采集改拉型：Phoenix 同步器（定时只读拉库→信封→同一 store_events），
+  替代"等对方配 collector"。原因：管线天级异步本不需要实时；对方零改动（只读账号即可）；
+  Phoenix 是 sink 不转发，且现无 collector。receiver（push 型）保留待命，两路汇于同一管道。
+  演进链：文件级读取(FileSessionReader)→OTLP实时→Phoenix拉取，两次转向均因外部前提变化。
+  关键规则：只导含 done 的完整 trace 且按 trace_id 全量一次导入（seq 一次成型，防分轮导入
+  seq 撞车导致幂等误杀）；水位=自增id优先，JSON 文件存储（人可改，重置即重拉）。
