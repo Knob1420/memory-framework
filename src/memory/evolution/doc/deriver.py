@@ -9,7 +9,7 @@ import logging
 from pathlib import Path
 
 from memory.evolution.doc.chunker import SmartChunker
-from memory.evolution.doc.extract import convert_to_markdown
+from memory.evolution.doc.extract import convert_to_markdown_file
 from memory.llm.client import LLMClient
 from memory.storage.engine import Chunk, L0Record, Storage
 
@@ -20,8 +20,10 @@ SUMMARY_CHARS = 100
 
 def derive_doc(l0: L0Record, storage: Storage, llm: LLMClient) -> int:
     """返回写入的 chunk 数。异常由调度器捕获置 failed。"""
-    md = convert_to_markdown(l0.path)  # md 直读；docx/xlsx 走转换链
-    parents = SmartChunker().chunk(md, Path(l0.path).stem, l0.id)
+    # 统一布局：md 落到原始文件旁边，内嵌图进 images/
+    md_path = convert_to_markdown_file(l0.path)
+    parents = SmartChunker().chunk(md_path.read_text(encoding="utf-8"),
+                                   Path(l0.path).stem, l0.id)
 
     rows: list[Chunk] = []
     for p in parents:

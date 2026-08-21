@@ -27,8 +27,6 @@ def create_app(cfg: Config | None = None) -> FastAPI:
     def health() -> dict:
         return {"status": "ok"}
 
-    # TODO(P0): 注册 /events、/ingest_doc 路由（transport 层）
-
     if cfg.phoenix_dsn:  # 拉型采集：配置了 dsn 才启动同步线程
         import threading
 
