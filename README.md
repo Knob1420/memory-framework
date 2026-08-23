@@ -1,30 +1,143 @@
 # memory-framework
 
-AI agent 记忆框架：跨 session 经验积累。SQLite（FTS5 + sqlite-vec）单文件存储，workspace 逻辑隔离。
+AI agent 记忆框架：跨 session 经验积累。agent 干过的活（文档、轨迹、代码）沉淀成可检索的记忆，
+下次干同样的活直接站在上次的肩膀上。首个落地场景：docgen（文档生成）与 codegen（代码生成）。
 
-七模块：transport（接入）/ orchestrator（编排）/ retrieval（检索）/ injection（注入）/ ingestion（采集）/ evolution（演化）/ storage（存储）。设计文档见 `docs/`。
+一句话技术形态：**FastAPI + 单 SQLite 文件（FTS5 + sqlite-vec）+ 后台演化线程**。部署即一个进程加一个数据目录。
 
-## 开发环境
+## 设计思路
+
+### 分层：L0 / L1 / L2
+
+```
+L0 原始层    采集到的一切，原样保存（append-only）      文件系统本体 + SQLite 元数据
+L1 派生层    L0 加工出的检索结构                        doc_chunks（chunk + 全文/向量索引）
+L2 经验层    演化出的结论（facts / scenes）             P2 起
+```
+
+原则：**L0 永远是真相源**——L1/L2 都是派生物，派生算法升级后可从 L0 重刷，不需要重新采集。
+
+### 演化是异步的
+
+采集与演化彻底解耦：入库接口只写 L0 + 状态置 `pending`，立即返回；后台调度器轮询 pending 池，
+逐条派生（转换→清洗→分块→嵌入→落 L1），成功 `derived`、失败 `failed`（错误留痕）。
+MinerU 跑一份 109 页 PDF 要 4 分钟——任何慢操作都不该占着 HTTP 请求。
+
+### 统一信封
+
+事件是内部唯一格式：`{session_id, events: [{seq, ts, kind, data}]}`。
+两扇采集门殊途同归——TS 插件推 JSON 到 `/events`，OTel 体系走 OTLP receiver / Phoenix 拉取——
+都翻译成信封进同一个 `store_events`。kind 是开放枚举，未知 kind 收下落盘 + 警告。
+
+### workspace 隔离
+
+codegen 和 docgen 的记忆物理分开（`data/<ws>/...`）+ 逻辑隔离（所有查询隐含 workspace 过滤）。
+对外表现为每个请求带 `X-Workspace` 头。
+
+### 七模块
+
+```
+transport（HTTP/OTLP 收发）   orchestrator（workspace 门）
+ingestion（外部格式→信封）     storage（唯一碰 SQL 的模块）
+evolution（L0→L1 演化，心脏）  llm（唯一外部模型出口）
+retrieval / injection（P1 step3 起开工）
+```
+
+## 一份数据的旅程（doc 链）
+
+```
+curl /ingest_doc ─► gate 验 workspace ─► put_doc（hash 去重、落盘、插 pending）
+  ─► 调度器 10s 轮询 ─► derive_doc ─► convert（markitdown / MinerU / libreoffice → md）
+  ─► clean 七步清洗 ─► chunker（表格归一 → 标题骨架 → parent/child → 上下文注入）
+  ─► embedder.embed ─► put_chunks（三表同写：本体+FTS+vec）─► mark_derived
+  ─►（step3 起）/search 命中 child → 回溯 parent 全文给 LLM
+```
+
+## 接口
+
+### HTTP（签名冻结于 [docs/contracts/http-api.md](docs/contracts/http-api.md)）
+
+| 端点 | 方法 | 作用 | 状态 |
+|---|---|---|---|
+| `/events` | POST | TS 插件推事件信封（JSON） | ✅ |
+| `/ingest_doc` | POST | 上传文档（multipart），hash 去重 | ✅ |
+| `/otlp/v1/traces` | POST | OTLP 接收（protobuf/JSON 双编码） | ✅ |
+| `/search` | POST | 检索（FTS+vec RRF 融合） | 计划 |
+| `/get/{id}` | GET | 取 chunk / parent 全文 | 计划 |
+
+全局约定：请求头 `X-Workspace` 必填；失败统一 `{"error": {code, message}}`；入库立即返回、派生异步。
+
+### storage（签名冻结于 [docs/contracts/storage.md](docs/contracts/storage.md)）
+
+按动词记，不背方法名：
+
+| 动词 | 方法 | 谁调用 |
+|---|---|---|
+| put（收） | `put_doc` / `put_session` / `put_chunks` | 端点、syncer、deriver |
+| read（给） | `read_session` / `pending`（+search_docs） | 演化引擎、调度器 |
+| mark（记状态） | `mark_derived` / `mark_failed` | 调度器 |
+
+### 内部关键接缝
+
+- `derive_doc(l0, storage, embedder)`：调度器 ↔ 演化链的接口
+- `embedder.embed(texts)`：鸭子类型，生产 `EmbeddingClient`（本地部署），测试 `FakeEmbedding`
+
+## 铁律（违反即全盘坏）
+
+1. **storage 永不调 LLM**——向量由调用方算好传入（成本边界 + 测试不需要 key）
+2. **影子表对调用方不存在**——FTS/vec 是 storage 的私事
+3. **storage 无 delete API**——记忆只能沉淀和淘汰，不能篡改
+4. **外部模型调用只出现在 `llm/` 包**——CI 的 mock 边界
+5. **span→信封映射只有 span_map.py 一个实现**——两扇门共享，禁止各自翻译
+6. 文件读写显式 `encoding="utf-8"`，路径一律 `pathlib`（跨 Windows/Linux 硬规则）
+
+完整决策记录（含被否掉的方案）：[docs/decisions.md](docs/decisions.md)。
+
+## 快速开始
 
 ```bash
-uv sync                          # 安装依赖（严格按 uv.lock）
-cp .env.example .env             # 填入 LLM key
-uv run uvicorn memory.main:app   # 启动服务
+uv sync                          # 严格按 uv.lock
+cp .env.example .env             # 填 LLM/embedding 配置（EMBEDDING_DIM 第一天定死）
+uv run uvicorn memory.main:app   # 启动（调度器/Phoenix 同步随进程自动起）
+```
+
+关键环境变量：`LLM_BASE_URL/MODEL`（OpenAI 兼容）、`EMBEDDING_BASE_URL/MODEL/DIM`（本地部署的
+OpenAI 兼容端点；**维度建表时定死，换模型 = 重建向量表**）。
+
+PDF/图片转换依赖 MinerU（独立 conda 环境，可选）：安装见 [docs/environments.md](docs/environments.md)。
+不装不影响其他格式，pdf/image 派生失败留痕。
+
+提交前本地跑全 CI 序列：
+
+```bash
+uv run ruff check . && uv run ruff format --check . && uv run pytest -q
+```
+
+## 目录与文档索引
+
+```
+src/memory/     七模块源码
+docs/contracts/ 契约（http-api / storage / otel-mapping / components）
+docs/schema/    表结构
+docs/design/    总体方案、文档转换方案
+docs/decisions.md  决策记录（模糊时先翻这里）
+data/           运行时数据（gitignore）
 ```
 
 ## 协作约定
 
 - **main 常绿**：CI 红了优先修，再开新分支
 - **PR 必须互审**：两人团队，互审是知识同步机制，不是质检
-- **文件读写显式 `encoding="utf-8"`，路径一律 `pathlib`**（跨 Windows/Linux 开发的硬规则）
 - 改接口/schema 的 PR 必须同时改 `docs/contracts/` 或 `docs/schema/`（契约随代码版本走）
 - commit 前缀：`transport / orchestrator / retrieval / injection / ingestion / evolution / storage / components / llm / docs / ci`
 
-## 目录
+## 路线图
 
-```
-src/memory/     七模块源码 + components（可插拔组件 Protocol）+ llm（唯一 mock 边界）
-docs/           契约、schema、设计文档（真源）
-archive/        设计期过程产物（不参与构建）
-data/           运行时数据目录（gitignore）
-```
+| 阶段 | 内容 | 状态 |
+|---|---|---|
+| P0 | 采集链全通（两扇门 + Phoenix 拉取）、L0、契约 | ✅ |
+| P1 | doc 链：转换/清洗/分块/派生/调度器 | ✅ |
+| P1 step3 | 检索口：search_docs + /search /get | 🔜 |
+| P2 | L2：TraceDeriver、facts/scenes 演化 | |
+| P3 | codegen 链：code_graph、repo 采集 | |
+| P4 | TS 插件（队友）、注入链 | |
