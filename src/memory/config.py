@@ -51,6 +51,9 @@ class Config:
     phoenix_interval_s: int = 300
     phoenix_start_from: str = "all"  # all=吃历史 | now=只收新的
 
+    # 演化调度器（pending 池轮询周期）
+    scheduler_interval_s: int = 10
+
 
 def load_config() -> Config:
     """yaml 打底，环境变量优先。"""

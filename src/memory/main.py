@@ -1,5 +1,7 @@
 """FastAPI 组装入口，唯一的 uvicorn 目标。"""
 
+import threading
+
 import uvicorn
 from fastapi import FastAPI
 
@@ -28,12 +30,22 @@ def create_app(cfg: Config | None = None) -> FastAPI:
         return {"status": "ok"}
 
     if cfg.phoenix_dsn:  # 拉型采集：配置了 dsn 才启动同步线程
-        import threading
-
         from memory.ingestion.phoenix_sync import PhoenixReader, PhoenixSyncer
 
         syncer = PhoenixSyncer(app.state.storage, PhoenixReader(cfg.phoenix_dsn), cfg)
         threading.Thread(target=syncer.run, daemon=True, name="phoenix-sync").start()
+
+    # 演化调度器：pending 池 → L1（derive_doc 链）
+    from memory.evolution.scheduler import run as run_scheduler
+    from memory.llm.client import EmbeddingClient
+
+    app.state.embedder = EmbeddingClient(cfg)
+    threading.Thread(
+        target=run_scheduler,
+        args=(app.state.storage, app.state.embedder, cfg.scheduler_interval_s),
+        daemon=True,
+        name="evolution-scheduler",
+    ).start()
 
     return app
 
