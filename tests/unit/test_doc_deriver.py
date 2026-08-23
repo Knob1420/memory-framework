@@ -12,9 +12,9 @@ from memory.storage.engine import Storage
 
 MD = (
     "# 遥测控数据表\n\n概述文字。" + "背景说明。" * 80 + "\n\n"
-    "## 指令对照\n\n" + "| TCI | 含义 | 值 |\n|--|--|--|\n" + "".join(
-        f"| TCI100{i} | 指令{i} | 8E001{i}AA |\n" for i in range(8)
-    )
+    "## 指令对照\n\n"
+    + "| TCI | 含义 | 值 |\n|--|--|--|\n"
+    + "".join(f"| TCI100{i} | 指令{i} | 8E001{i}AA |\n" for i in range(8))
 )
 
 
@@ -33,8 +33,7 @@ def test_doc_chain(store):
     assert n > 0
     store.mark_derived(rec.id)
 
-    rows = store.db.execute(
-        "SELECT id,parent_id FROM doc_chunks ORDER BY id").fetchall()
+    rows = store.db.execute("SELECT id,parent_id FROM doc_chunks ORDER BY id").fetchall()
     parents = [r for r in rows if r[1] is None]
     children = [r for r in rows if r[1] is not None]
     assert parents and children and len(rows) == n

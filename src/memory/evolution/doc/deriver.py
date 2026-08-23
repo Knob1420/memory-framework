@@ -21,19 +21,31 @@ def derive_doc(l0: L0Record, storage: Storage, embedder) -> int:
     """返回写入的 chunk 数。异常由调度器捕获置 failed。"""
     # 统一布局：md 落到原始文件旁边，内嵌图进 images/
     md_path = convert_to_markdown_file(l0.path)
-    parents = SmartChunker().chunk(md_path.read_text(encoding="utf-8"),
-                                   Path(l0.path).stem, l0.id)
+    parents = SmartChunker().chunk(md_path.read_text(encoding="utf-8"), Path(l0.path).stem, l0.id)
 
     rows: list[Chunk] = []
     for p in parents:
         pid = p.metadata.get("chunk_id", f"{l0.id}_p?")
         title = p.metadata.get("path", "") or p.metadata.get("doc_title")
-        rows.append(Chunk(pid, l0.id, l0.workspace, None, 0, title,
-                          p.content[:SUMMARY_CHARS], p.content, []))
+        rows.append(
+            Chunk(
+                pid, l0.id, l0.workspace, None, 0, title, p.content[:SUMMARY_CHARS], p.content, []
+            )
+        )
         for j, child in enumerate(p.children, start=1):
-            rows.append(Chunk(child.metadata.get("chunk_id", f"{pid}_c{j}"), l0.id,
-                              l0.workspace, pid, j, title,
-                              child.content[:SUMMARY_CHARS], child.content, []))
+            rows.append(
+                Chunk(
+                    child.metadata.get("chunk_id", f"{pid}_c{j}"),
+                    l0.id,
+                    l0.workspace,
+                    pid,
+                    j,
+                    title,
+                    child.content[:SUMMARY_CHARS],
+                    child.content,
+                    [],
+                )
+            )
 
     vecs = embedder.embed([r.content for r in rows])  # 铁律：storage 不调 LLM，调用方算好传入
     for r, v in zip(rows, vecs):

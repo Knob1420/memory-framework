@@ -85,7 +85,7 @@ def _html_table_to_md(html: str) -> str:
             df = df.loc[:, (df.astype(str) != "").any()]
             if not df.empty:
                 if not has_th:  # pandas 数字列名 → col1/col2/...
-                    df.columns = [f"col{i+1}" for i in range(len(df.columns))]
+                    df.columns = [f"col{i + 1}" for i in range(len(df.columns))]
                 md = df.to_markdown(index=False)
                 if len(re.sub(r"[|\- \n]", "", md)) >= 3:  # 有实质内容
                     return md
@@ -96,20 +96,16 @@ def _html_table_to_md(html: str) -> str:
 
 def _html_table_to_md_simple(html: str) -> str:
     """兜底：正则提取 <th>/<td>，不展开合并单元格。"""
-    strip = lambda s: re.sub(r"<[^>]+>", "", s).strip()  # noqa: E731
+    strip = lambda s: re.sub(r"<[^>]+>", "", s).strip()
 
     rows = re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.DOTALL | re.IGNORECASE)
     if not rows:
         return ""
     headers = [
-        strip(h)
-        for h in re.findall(r"<th[^>]*>(.*?)</th>", html, re.DOTALL | re.IGNORECASE)
+        strip(h) for h in re.findall(r"<th[^>]*>(.*?)</th>", html, re.DOTALL | re.IGNORECASE)
     ]
     parsed = [
-        [
-            strip(c)
-            for c in re.findall(r"<td[^>]*>(.*?)</td>", r, re.DOTALL | re.IGNORECASE)
-        ]
+        [strip(c) for c in re.findall(r"<td[^>]*>(.*?)</td>", r, re.DOTALL | re.IGNORECASE)]
         for r in rows
     ]
     parsed = [r for r in parsed if any(r)]
@@ -278,9 +274,7 @@ class SmartChunker:
         for p_idx, sec in enumerate(sections):
             parent_id = f"{doc_id}_p{p_idx}"
             path = " / ".join(
-                sec.metadata.get(k, "")
-                for k in ("H1", "H2", "H3")
-                if sec.metadata.get(k)
+                sec.metadata.get(k, "") for k in ("H1", "H2", "H3") if sec.metadata.get(k)
             )
             common_meta = {
                 "doc_id": doc_id,
@@ -306,9 +300,7 @@ class SmartChunker:
                 )
             )
 
-        logger.info(
-            f"[Chunker] 分块完成: {len(documents)} parents (children={child_idx})"
-        )
+        logger.info(f"[Chunker] 分块完成: {len(documents)} parents (children={child_idx})")
         return documents
 
     # ── child 切分 ─────────────────────────────────────────────────────
@@ -353,8 +345,7 @@ class SmartChunker:
                 ctx = prefix + (f"表格（前文: {anchor[-80:]}）\n" if anchor else "")
                 if len(unit) > TABLE_CHILD_MAX:
                     pieces.extend(
-                        (ctx + p, True)
-                        for p in _split_large_md_table(unit, TABLE_CHILD_MAX)
+                        (ctx + p, True) for p in _split_large_md_table(unit, TABLE_CHILD_MAX)
                     )
                 else:
                     pieces.append((ctx + unit, True))
@@ -405,10 +396,7 @@ class SmartChunker:
             if current is None:
                 current = sec
             else:
-                if (
-                    len(current.page_content) + len(sec.page_content) + 2
-                    > MAX_PARENT_SIZE
-                ):
+                if len(current.page_content) + len(sec.page_content) + 2 > MAX_PARENT_SIZE:
                     merged.append(current)
                     current = sec
                     continue
@@ -420,8 +408,7 @@ class SmartChunker:
         if current:
             if (
                 merged
-                and len(merged[-1].page_content) + len(current.page_content) + 2
-                <= MAX_PARENT_SIZE
+                and len(merged[-1].page_content) + len(current.page_content) + 2 <= MAX_PARENT_SIZE
             ):
                 merged[-1].page_content += "\n\n" + current.page_content
                 self._merge_metadata(merged[-1], current)
@@ -447,10 +434,7 @@ class SmartChunker:
                     current = current + ("\n" if current else "") + unit
             if current:
                 chunks.append(current)
-            result.extend(
-                LCDocument(page_content=ch, metadata=dict(sec.metadata))
-                for ch in chunks
-            )
+            result.extend(LCDocument(page_content=ch, metadata=dict(sec.metadata)) for ch in chunks)
         return result
 
     @staticmethod

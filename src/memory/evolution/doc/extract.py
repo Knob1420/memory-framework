@@ -21,8 +21,15 @@ IMAGE_FORMATS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff"}
 def detect_format(file_path: str) -> str:
     ext = Path(file_path).suffix.lower()
     return {
-        ".pdf": "pdf", ".doc": "doc", ".docx": "docx", ".pptx": "pptx", ".ppt": "ppt",
-        ".xlsx": "xlsx", ".xls": "xls", ".csv": "csv", ".md": "md",
+        ".pdf": "pdf",
+        ".doc": "doc",
+        ".docx": "docx",
+        ".pptx": "pptx",
+        ".ppt": "ppt",
+        ".xlsx": "xlsx",
+        ".xls": "xls",
+        ".csv": "csv",
+        ".md": "md",
         **{e: "image" for e in IMAGE_FORMATS},
     }.get(ext, "unknown")
 
@@ -41,15 +48,32 @@ def _run_mineru(path: Path) -> str:
 
     cfg = load_config()
     if not cfg.mineru_enabled:
-        raise RuntimeError("pdf/image 需要 MinerU：config.yaml 里 mineru.enabled 未开"
-                           "（环境安装见 docs/environments.md）")
+        raise RuntimeError(
+            "pdf/image 需要 MinerU：config.yaml 里 mineru.enabled 未开"
+            "（环境安装见 docs/environments.md）"
+        )
 
     with tempfile.TemporaryDirectory() as out_dir:
         cmd = [
-            "conda", "run", "--no-capture-output", "-n", cfg.mineru_conda_env,
-            "env", "CUDA_DEVICE_ORDER=PCI_BUS_ID", f"CUDA_VISIBLE_DEVICES={cfg.mineru_gpu}",
-            "mineru", "-p", str(path), "-o", out_dir,
-            "-b", cfg.mineru_backend, "--effort", cfg.mineru_effort, "-l", cfg.mineru_lang,
+            "conda",
+            "run",
+            "--no-capture-output",
+            "-n",
+            cfg.mineru_conda_env,
+            "env",
+            "CUDA_DEVICE_ORDER=PCI_BUS_ID",
+            f"CUDA_VISIBLE_DEVICES={cfg.mineru_gpu}",
+            "mineru",
+            "-p",
+            str(path),
+            "-o",
+            out_dir,
+            "-b",
+            cfg.mineru_backend,
+            "--effort",
+            cfg.mineru_effort,
+            "-l",
+            cfg.mineru_lang,
         ]
         # ponytail: 109页实测 4m22s(~2.4s/页)，上限 30min；更大文档再调
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
@@ -100,9 +124,18 @@ def _convert_with_libreoffice(path: Path) -> Optional[str]:
     try:
         with tempfile.TemporaryDirectory() as td:
             result = subprocess.run(
-                ["libreoffice", "--headless", "--convert-to", "txt:Text (encoded)",
-                 "--outdir", td, str(path)],
-                capture_output=True, text=True, timeout=60,
+                [
+                    "libreoffice",
+                    "--headless",
+                    "--convert-to",
+                    "txt:Text (encoded)",
+                    "--outdir",
+                    td,
+                    str(path),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
             if result.returncode != 0:
                 return None
@@ -132,8 +165,9 @@ def _normalize_docx_paths(path: Path) -> Path:
     os.close(fd)
     with zipfile.ZipFile(path) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
         for item in zin.infolist():
-            info = zipfile.ZipInfo(filename=item.filename.replace("\\", "/"),
-                                   date_time=item.date_time)
+            info = zipfile.ZipInfo(
+                filename=item.filename.replace("\\", "/"), date_time=item.date_time
+            )
             info.compress_type = item.compress_type
             zout.writestr(info, zin.read(item.filename))
     shutil.move(tmp, path)
@@ -218,7 +252,10 @@ def convert_to_markdown(file_path: str) -> str:
     if fmt in ("pdf", "image"):
         return _run_mineru(path)  # 同一条 MinerU 路（文字直提+OCR）
     return {
-        "doc": _convert_doc, "docx": _convert_docx,
-        "pptx": _convert_pptx, "xlsx": _convert_xlsx, "xls": _convert_xlsx,
+        "doc": _convert_doc,
+        "docx": _convert_docx,
+        "pptx": _convert_pptx,
+        "xlsx": _convert_xlsx,
+        "xls": _convert_xlsx,
         "csv": _convert_csv,
     }[fmt](path)

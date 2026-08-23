@@ -112,9 +112,7 @@ class TextCleaner:
         闸门：行数 >20 不删（大表保护）、格子 <4 不判。
         MinerU 会把大表拆成碎片 <table>——间隔纯空白的连续表分组聚合判定。
         """
-        html_table_pattern = re.compile(
-            r"<table[^>]*>.*?</table>", re.DOTALL | re.IGNORECASE
-        )
+        html_table_pattern = re.compile(r"<table[^>]*>.*?</table>", re.DOTALL | re.IGNORECASE)
         tables_info = [
             {"start": m.start(), "end": m.end(), "content": m.group(0)}
             for m in html_table_pattern.finditer(text)
@@ -138,14 +136,10 @@ class TextCleaner:
             combined = " ".join(t["content"] for t in group)
             if len(re.findall(r"<tr", combined, re.IGNORECASE)) > 20:
                 continue
-            cells = re.findall(
-                r"<t[dh][^>]*>(.*?)</t[dh]>", combined, re.DOTALL | re.IGNORECASE
-            )
+            cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", combined, re.DOTALL | re.IGNORECASE)
             if len(cells) < 4:
                 continue
-            empty = sum(
-                1 for c in cells if len(re.sub(r"<[^>]+>|\s|\[图片\]", "", c)) < 2
-            )
+            empty = sum(1 for c in cells if len(re.sub(r"<[^>]+>|\s|\[图片\]", "", c)) < 2)
             if empty / len(cells) >= 0.6:
                 to_delete.append((group[0]["start"], group[-1]["end"]))
 
@@ -166,14 +160,10 @@ class TextCleaner:
                 while j < len(lines) and lines[j].strip().startswith("|"):
                     j += 1
                 block = lines[i:j]
-                rows = [
-                    ln for ln in block if not re.match(r"^\s*\|[\s\-|:]+\|?\s*$", ln)
-                ]
+                rows = [ln for ln in block if not re.match(r"^\s*\|[\s\-|:]+\|?\s*$", ln)]
                 cells = [c for ln in rows for c in ln.strip().strip("|").split("|")]
                 if len(rows) <= 20 and len(cells) >= 4:
-                    empty = sum(
-                        1 for c in cells if len(re.sub(r"\s|\[图片\]", "", c)) < 2
-                    )
+                    empty = sum(1 for c in cells if len(re.sub(r"\s|\[图片\]", "", c)) < 2)
                     if empty / len(cells) >= 0.6:
                         i = j
                         continue

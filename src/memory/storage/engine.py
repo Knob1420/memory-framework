@@ -162,8 +162,9 @@ class Storage:
     def put_chunks(self, chunks: list[Chunk]) -> None:
         l0_ids = {c.l0_id for c in chunks}
         for l0_id in l0_ids:
-            olds = [r[0] for r in self.db.execute(
-                "SELECT id FROM doc_chunks WHERE l0_id=?", (l0_id,))]
+            olds = [
+                r[0] for r in self.db.execute("SELECT id FROM doc_chunks WHERE l0_id=?", (l0_id,))
+            ]
             if olds:
                 marks = ",".join("?" * len(olds))
                 self.db.execute(f"DELETE FROM doc_chunks WHERE id IN ({marks})", olds)
@@ -173,8 +174,17 @@ class Storage:
             self.db.execute(
                 "INSERT INTO doc_chunks (id,l0_id,workspace,parent_id,seq,title,summary,content,"
                 "created_at) VALUES (?,?,?,?,?,?,?,?,?)",
-                (c.id, c.l0_id, c.workspace, c.parent_id, c.seq, c.title, c.summary,
-                 c.content, _now()),
+                (
+                    c.id,
+                    c.l0_id,
+                    c.workspace,
+                    c.parent_id,
+                    c.seq,
+                    c.title,
+                    c.summary,
+                    c.content,
+                    _now(),
+                ),
             )
             self.db.execute(
                 "INSERT INTO doc_chunks_fts (content,title,chunk_id,workspace) VALUES (?,?,?,?)",

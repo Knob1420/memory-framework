@@ -14,6 +14,7 @@ from typing import Dict, List, Optional
 class ChildDocument:
     """metadata 必含：chunk_id, parent_id, path, doc_title；
     透传：doc_id, H1/H2/H3（供将来检索过滤）。"""
+
     content: str
     metadata: Dict[str, str] = field(default_factory=dict)
 
@@ -21,6 +22,7 @@ class ChildDocument:
 @dataclass
 class Document:
     """metadata 必含：chunk_id, path, doc_title；透传：doc_id, H1/H2/H3。"""
+
     content: str
     metadata: Dict[str, str] = field(default_factory=dict)
     children: Optional[List[ChildDocument]] = None

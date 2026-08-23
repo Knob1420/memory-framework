@@ -1,6 +1,5 @@
 """extract：格式检测分支 + md 双存。重转换(markitdown/libreoffice)不进 CI。"""
 
-
 import pytest
 
 from memory.evolution.doc.extract import convert_to_markdown_file, detect_format
@@ -63,6 +62,7 @@ def test_unified_layout_with_images(tmp_path):
     assert dest == tmp_path / "带图.md"
     # md 已存在 → 早返回；但内嵌图提取独立验证：
     from memory.evolution.doc.extract import _extract_zip_media
+
     _extract_zip_media(src)
     assert (tmp_path / "images/image1.png").read_bytes() == b"\x89PNG-fake"
     assert (tmp_path / "images/image2.png").exists()
