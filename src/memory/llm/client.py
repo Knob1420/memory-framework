@@ -1,6 +1,8 @@
-"""LLM client 封装：全项目唯一允许触达 LLM API 的地方（decisions.md 铁律）。
+"""模型客户端封装：全项目唯一允许触达外部模型 API 的地方（decisions.md 铁律）。
 
-P0 只做壳 + FakeLLM（无业务调用方）；P1 补 schema 强制解析与解析重试。
+- LLMClient:      chat 走 OpenAI 兼容 API（大模型）
+- EmbeddingClient: embedding 走本地部署（OpenAI 兼容 /v1/embeddings，vLLM/TEI 等）
+P1 补 schema 强制解析与解析重试。
 """
 
 import time
@@ -39,6 +41,17 @@ class LLMClient:
             model=model,
         )
 
+
+class EmbeddingClient:
+    """本地部署的 embedding 服务（OpenAI 兼容端点）。"""
+
+    def __init__(self, cfg: Config):
+        self.cfg = cfg
+        self._client = OpenAI(
+            api_key=cfg.llm_api_key or "local",  # 本地服务通常不校验 key
+            base_url=cfg.embedding_base_url or cfg.llm_base_url,
+        )
+
     def embed(self, texts: list[str]) -> list[list[float]]:
         resp = self._client.embeddings.create(model=self.cfg.embedding_model, input=texts)
         vecs = [d.embedding for d in resp.data]
@@ -59,7 +72,9 @@ class FakeLLM:
     def chat(self, messages: list[dict], model: str | None = None) -> LLMResult:
         return LLMResult(content="ok", model="fake")
 
-    def embed(self, texts: list[str]) -> list[list[float]]:
-        return [[0.0] * self._dim for _ in texts]
 
-    _dim = 8  # ponytail: 测试用小维度，真维度由 Config 校验
+class FakeEmbedding:
+    """测试替身：8 维零向量（维度由测试里 Config 配成一致）。"""
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        return [[0.0] * 8 for _ in texts]

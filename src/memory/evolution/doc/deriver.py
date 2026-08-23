@@ -1,6 +1,6 @@
 """DocChunkDeriver：L0 doc → 提取/清洗/分块（移植自 rag-clean）→ 向量化 → doc_chunks。
 
-LLM 边界：embedding 经注入的 llm 客户端（测试用 FakeLLM）。
+embedding 边界：经注入的 embedder（测试用 FakeEmbedding）。
 ponytail: summary 用内容截断而非 LLM 摘要——search 只需索引卡判断要不要 get，
 LLM 摘要等链 B 的 llm/schema 补全后再挂。
 """
@@ -10,7 +10,6 @@ from pathlib import Path
 
 from memory.evolution.doc.chunker import SmartChunker
 from memory.evolution.doc.extract import convert_to_markdown_file
-from memory.llm.client import LLMClient
 from memory.storage.engine import Chunk, L0Record, Storage
 
 log = logging.getLogger(__name__)
@@ -18,7 +17,7 @@ log = logging.getLogger(__name__)
 SUMMARY_CHARS = 100
 
 
-def derive_doc(l0: L0Record, storage: Storage, llm: LLMClient) -> int:
+def derive_doc(l0: L0Record, storage: Storage, embedder) -> int:
     """返回写入的 chunk 数。异常由调度器捕获置 failed。"""
     # 统一布局：md 落到原始文件旁边，内嵌图进 images/
     md_path = convert_to_markdown_file(l0.path)
@@ -36,7 +35,7 @@ def derive_doc(l0: L0Record, storage: Storage, llm: LLMClient) -> int:
                               l0.workspace, pid, j, title,
                               child.content[:SUMMARY_CHARS], child.content, []))
 
-    vecs = llm.embed([r.content for r in rows])  # 铁律：storage 不调 LLM，调用方算好传入
+    vecs = embedder.embed([r.content for r in rows])  # 铁律：storage 不调 LLM，调用方算好传入
     for r, v in zip(rows, vecs):
         r.embedding = v
     storage.put_chunks(rows)

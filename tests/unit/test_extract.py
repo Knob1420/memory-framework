@@ -13,20 +13,21 @@ def test_detect_format_branches():
     assert detect_format("a.exe") == "unknown"
 
 
-def test_image_policy(tmp_path):
+def test_pdf_image_disabled_policy(tmp_path, monkeypatch):
+    """mineru.enabled=false 时 pdf/image 报可读错误（队友无环境的默认体验）。
+    monkeypatch memory.config.load_config——_run_mineru 是函数内 import，必须 patch 源头。"""
+    from memory import config as cfg_mod
     from memory.evolution.doc.extract import convert_to_markdown
-    img = tmp_path / "x.png"
-    img.write_bytes(b"\x89PNG")
-    with pytest.raises(RuntimeError, match="OCR"):
-        convert_to_markdown(str(img))
 
+    orig = cfg_mod.load_config()
+    orig.mineru_enabled = False
+    monkeypatch.setattr(cfg_mod, "load_config", lambda: orig)
 
-def test_pdf_policy(tmp_path):
-    from memory.evolution.doc.extract import convert_to_markdown
-    pdf = tmp_path / "x.pdf"
-    pdf.write_bytes(b"%PDF")
-    with pytest.raises(NotImplementedError, match="MinerU"):
-        convert_to_markdown(str(pdf))
+    for name, blob in (("x.pdf", b"%PDF"), ("x.png", b"\x89PNG")):
+        p = tmp_path / name
+        p.write_bytes(blob)
+        with pytest.raises(RuntimeError, match="mineru.enabled"):
+            convert_to_markdown(str(p))
 
 
 def test_md_persistence(tmp_path):

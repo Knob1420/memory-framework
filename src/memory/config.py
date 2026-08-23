@@ -23,6 +23,9 @@ class Config:
 
     # embedding（维度建表时定死，换模型 = 重建向量表）
     embedding_model: str = field(default_factory=lambda: os.environ.get("EMBEDDING_MODEL", ""))
+    embedding_base_url: str = field(
+        default_factory=lambda: os.environ.get("EMBEDDING_BASE_URL", "")
+    )  # 本地部署的 OpenAI 兼容端点；空则回落 llm_base_url
     embedding_dim: int = field(default_factory=lambda: int(os.environ.get("EMBEDDING_DIM", "1024")))
 
     # 路径
@@ -33,6 +36,14 @@ class Config:
 
     # workspace 注册表（编排门消费）。ponytail: P0 只有名单，P1 升级为组件注册 dict
     workspaces: list[str] = field(default_factory=list)
+
+    # MinerU（PDF/图片 OCR，可选环境；未启用时 pdf/image 派生失败留痕）
+    mineru_enabled: bool = False
+    mineru_conda_env: str = "mineru"
+    mineru_gpu: str = "2"
+    mineru_backend: str = "hybrid-engine"
+    mineru_effort: str = "medium"
+    mineru_lang: str = "ch"
 
     # Phoenix 同步（拉型采集，docgen 数据源）。dsn 为空则不启动。
     phoenix_dsn: str = field(default_factory=lambda: os.environ.get("PHOENIX_DSN", ""))
@@ -53,4 +64,12 @@ def load_config() -> Config:
             cfg.phoenix_dsn = p.get("dsn", cfg.phoenix_dsn)
             cfg.phoenix_interval_s = int(p.get("interval_s", cfg.phoenix_interval_s))
             cfg.phoenix_start_from = str(p.get("start_from", cfg.phoenix_start_from))
+        if isinstance(raw.get("mineru"), dict):
+            m = raw["mineru"]
+            cfg.mineru_enabled = bool(m.get("enabled", cfg.mineru_enabled))
+            cfg.mineru_conda_env = str(m.get("conda_env", cfg.mineru_conda_env))
+            cfg.mineru_gpu = str(m.get("gpu", cfg.mineru_gpu))
+            cfg.mineru_backend = str(m.get("backend", cfg.mineru_backend))
+            cfg.mineru_effort = str(m.get("effort", cfg.mineru_effort))
+            cfg.mineru_lang = str(m.get("lang", cfg.mineru_lang))
     return cfg

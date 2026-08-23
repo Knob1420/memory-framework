@@ -8,3 +8,13 @@ phoenix:
   dsn: ""
   interval_s: 300
   start_from: all    # all=吃历史（facts 冷启动原料） | now=只收新的
+
+# MinerU（PDF/图片 OCR → md，可选环境）。enabled=false 或环境未装时，
+# pdf/image 派生失败留痕，其余格式不受影响。环境安装见 docs/environments.md
+mineru:
+  enabled: true
+  conda_env: memory        # 本机用现成 env；新服务器自建后改这里
+  gpu: "2"                 # CUDA_VISIBLE_DEVICES
+  backend: hybrid-engine
+  effort: medium
+  lang: ch

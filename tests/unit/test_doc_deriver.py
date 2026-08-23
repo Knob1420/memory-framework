@@ -1,13 +1,13 @@
 """文档链最小闭环：put_doc → derive_doc → doc_chunks 三表齐（主表+FTS+vec）。
 
-FakeLLM 提供向量（无 key 可测）；分块/清洗/提取是 rag-clean 移植件，真跑。
+FakeEmbedding 提供向量（无 key 可测）；分块/清洗/提取是 rag-clean 移植件，真跑。
 """
 
 import pytest
 
 from memory.config import Config
 from memory.evolution.doc.deriver import derive_doc
-from memory.llm.client import FakeLLM
+from memory.llm.client import FakeEmbedding
 from memory.storage.engine import Storage
 
 MD = (
@@ -21,7 +21,7 @@ MD = (
 @pytest.fixture
 def store(tmp_path):
     cfg = Config(data_dir=tmp_path)
-    cfg.embedding_dim = 8  # 与 FakeLLM 一致
+    cfg.embedding_dim = 8  # 与 FakeEmbedding 一致
     return Storage(cfg)
 
 
@@ -29,7 +29,7 @@ def test_doc_chain(store):
     rec = store.put_doc(MD.encode(), {"filename": "遥测控.md"}, "docgen")
     assert rec.hash_hit is False and rec.derived_state == "pending"
 
-    n = derive_doc(rec, store, FakeLLM())
+    n = derive_doc(rec, store, FakeEmbedding())
     assert n > 0
     store.mark_derived(rec.id)
 
@@ -47,6 +47,6 @@ def test_doc_chain(store):
     # 状态机
     assert store.pending() == []  # 已 derived，不再 pending
     # 二次派生：整体替换，不翻倍
-    derive_doc(rec, store, FakeLLM())
+    derive_doc(rec, store, FakeEmbedding())
     again = store.db.execute("SELECT count(*) FROM doc_chunks").fetchone()[0]
     assert again == n

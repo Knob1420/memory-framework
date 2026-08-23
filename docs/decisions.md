@@ -30,3 +30,13 @@
   演进链：文件级读取(FileSessionReader)→OTLP实时→Phoenix拉取，两次转向均因外部前提变化。
   关键规则：只导含 done 的完整 trace 且按 trace_id 全量一次导入（seq 一次成型，防分轮导入
   seq 撞车导致幂等误杀）；水位=自增id优先，JSON 文件存储（人可改，重置即重拉）。
+- 2026-08-23 清洗器原则：结构性信号优先于领域关键词（空格率≥60% 判空表、跨页重复≥3 判页眉页脚、
+  字符集形态判页码、强/弱特征成串判目录），清洗器领域无关；URL/邮箱保留（是下游 LLM 的线索）；
+  图片语法→[图片] 占位、图例保留（图例是图片的语义描述，占位同时是空表格判定的输入）。
+- 2026-08-23 chunker 重写（891→~440 行）：表格在入口归一为 md 管道表（早渲染，删 _chunk_semantic 等
+  170 行死代码）；单元序列唯一解析点 _parse_units（表格原子不与正文混切）；child 上下文注入——
+  [路径: H1/H2/H3] 前缀进每个 child，表格再拼前一句作锚（真实 IDS 文档验证：标题结构缺失时
+  前文锚承担分节定位）。教训：单元拼接必须补 \n，MinerU 说明行紧贴表格，粘连会毁掉表格识别。
+- 2026-08-23 embedding 与 LLM 分端点部署：EmbeddingClient 独立 base_url（本地部署的 OpenAI 兼容
+  /v1/embeddings，vLLM/TEI 等），LLM 走 OpenAI API；维度校验仍在写库前拦截。deriver 只依赖
+  embedder.embed（鸭子类型），FakeEmbedding 替身测试。

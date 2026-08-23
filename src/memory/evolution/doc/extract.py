@@ -1,8 +1,7 @@
-"""格式提取：任意文档 → Markdown（从 rag-clean/core/ingestion/extractor.py 裁剪移植）。
+"""格式提取：任意文档 → Markdown（从 rag-clean 裁剪移植 + MinerU 接入）。
 
-裁剪：去掉 Document 构建与 MinerU 服务调用。
-ponytail: PDF 暂不支持（MinerU 未迁移）——需要时从 rag-clean 搬 mineru_client +
-其配置（mineru3_env/gpu/backend 等），挂进 _convert_pdf。
+PDF/图片 → MinerU（独立 conda env，子进程调用，config.yaml mineru 节控制）；
+其余 → markitdown / libreoffice。统一布局落盘见 convert_to_markdown_file。
 """
 
 import logging
@@ -26,6 +25,52 @@ def detect_format(file_path: str) -> str:
         ".xlsx": "xlsx", ".xls": "xls", ".csv": "csv", ".md": "md",
         **{e: "image" for e in IMAGE_FORMATS},
     }.get(ext, "unknown")
+
+
+# ── MinerU（PDF/图片 OCR，子进程调独立 conda env）─────────
+
+
+def _run_mineru(path: Path) -> str:
+    """MinerU CLI：hybrid-engine（文字直提+OCR+跨页表格合并），产出 md+images/。
+
+    输出落统一布局：md 内容由调用方写目标文件，images/ 移到原始文件旁。
+    """
+    import shutil
+
+    from memory.config import load_config
+
+    cfg = load_config()
+    if not cfg.mineru_enabled:
+        raise RuntimeError("pdf/image 需要 MinerU：config.yaml 里 mineru.enabled 未开"
+                           "（环境安装见 docs/environments.md）")
+
+    with tempfile.TemporaryDirectory() as out_dir:
+        cmd = [
+            "conda", "run", "--no-capture-output", "-n", cfg.mineru_conda_env,
+            "env", "CUDA_DEVICE_ORDER=PCI_BUS_ID", f"CUDA_VISIBLE_DEVICES={cfg.mineru_gpu}",
+            "mineru", "-p", str(path), "-o", out_dir,
+            "-b", cfg.mineru_backend, "--effort", cfg.mineru_effort, "-l", cfg.mineru_lang,
+        ]
+        # ponytail: 109页实测 4m22s(~2.4s/页)，上限 30min；更大文档再调
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        if r.returncode != 0:
+            tail = (r.stderr or r.stdout)[-800:]
+            raise RuntimeError(f"mineru 失败 rc={r.returncode}: {path.name}\n{tail}")
+
+        md_files = list(Path(out_dir).rglob("*.md"))
+        if not md_files:
+            raise RuntimeError(f"mineru 未生成 markdown: {path.name}")
+        md = md_files[0].read_text(encoding="utf-8")
+
+        # images/ 移到原始文件旁（统一布局；md 里相对路径引用不断链）
+        for img_dir in Path(out_dir).rglob("images"):
+            if img_dir.is_dir():
+                dest = path.parent / "images"
+                dest.mkdir(exist_ok=True)
+                for img in img_dir.iterdir():
+                    shutil.move(str(img), dest / img.name)
+                break
+    return md
 
 
 # ── 转换器 ────────────────────────────────────────────────
@@ -170,12 +215,8 @@ def convert_to_markdown(file_path: str) -> str:
 
     if fmt == "ppt":
         raise RuntimeError("老 PPT 格式暂不支持，请转换为 PPTX")
-    if fmt == "image":
-        # ponytail: 图片 OCR 未接——需要时走 MinerU（与 PDF 同一条路）
-        raise RuntimeError("图片暂不支持：OCR 未接入（规划走 MinerU，与 PDF 同路）")
-    if fmt == "pdf":
-        # ponytail: PDF=MinerU（文字+OCR），暂缓接入，需要时从 rag-clean 搬 mineru_client
-        raise NotImplementedError("PDF 暂不支持：MinerU 未接入")
+    if fmt in ("pdf", "image"):
+        return _run_mineru(path)  # 同一条 MinerU 路（文字直提+OCR）
     return {
         "doc": _convert_doc, "docx": _convert_docx,
         "pptx": _convert_pptx, "xlsx": _convert_xlsx, "xls": _convert_xlsx,
