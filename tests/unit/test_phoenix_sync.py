@@ -15,6 +15,7 @@ from memory.ingestion.service import _seq_cache
 from memory.storage.engine import Storage
 
 SAMPLE = Path(__file__).parents[2] / "docs/example/docgen-real-tc03-spans.arrow"
+SAMPLE_V2 = Path(__file__).parents[2] / "docs/example/export-otel-v2-thinking-think-rec-1.json"
 
 
 class FakeReader:
@@ -118,8 +119,30 @@ def test_real_tc03_sample(tmp_path):
 
     sessions = store.pending()
     assert len(sessions) == 14
-    # 抽查一条：kind 词表、树、排序全对
-    events = store.read_session("docgen", sessions[0].id)
+
+
+def test_real_v2_export(tmp_path):
+    """v2 埋点导出（含消息/thinking）全链路：解析 → 映射 → 落库。"""
+    _seq_cache.clear()
+    store = Storage(Config(data_dir=tmp_path))
+    spans = PhoenixRestReader.parse_export(SAMPLE_V2.read_bytes())
+    assert len(spans) == 94
+
+    reader = FakeReader()
+    reader.rows = spans
+    syncer = PhoenixSyncer(store, reader, Config(data_dir=tmp_path))
+    imported, _held = syncer.poll_once()
+    assert imported == 1  # 单 trace，含 done
+
+    events = store.read_session("docgen", store.pending()[0].id)
+    llm = [e for e in events if e.kind == "llm_call"]
+    assert len(llm) == 15
+    # 完整对话都在：输入含 system prompt、输出、thinking
+    first = llm[0].data
+    assert first["messages_in"][0]["role"] == "system"
+    assert len(first["messages_in"][0]["content"]) > 1000
+    assert first["thinking"]
+    assert any(e.kind == "tool_call" for e in events)
     kinds = {e.kind for e in events}
-    assert "session_end" in kinds and "llm_call" in kinds and "tool_call" in kinds
+    assert "session_end" in kinds
     assert [e.seq for e in events] == sorted(e.seq for e in events)

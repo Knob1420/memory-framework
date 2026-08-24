@@ -49,3 +49,9 @@
   再按名单跳过；量级上来后换服务端时间过滤）。span_map 词表对真实数据核对修正：
   tool:* 前缀（非裸 tool）、tokens 取 llm.token_count.*（非 gen_ai.*）、llm_call 保留 docgen 负载。
   真实样例回归：14/16 trace 导入，2 条无 done 的半截 trace（含 46 span 中途失败运行）正确拒绝。
+- 2026-08-24 v2 埋点数据补全（推翻同日早间"无对话内容"结论）：tc03 是 v1 埋点只有元数据；
+  otel-v2 导出（GraphQL export JSON，dotted 拍平键）含 llm.input/output_messages 全文、
+  tool_call 参数、docgen.llm.thinking、tool input/output.value——P2 经验演化原料齐备。
+  span_map llm_call 相应携带 messages_in/out + thinking + call_site；phoenix_sync 增
+  parse_export（导出 JSON→span dict）。v1(REST Arrow)/v2(导出 JSON) 双格式并行支持，
+  持续采集通道（REST 是否含 v2 属性）待与 docgen 确认。

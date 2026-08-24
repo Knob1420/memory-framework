@@ -1,7 +1,8 @@
 """span → 信封事件的统一映射（otel-mapping.md 的唯一实现，不允许第二份）。
 
 输入是归一化的 span dict：{name, span_id, parent_id, start_ns, attrs}。
-适配器：Phoenix REST 同步器（Arrow 行→dict）。词表已对真实 tc03 数据核对。
+适配器：Phoenix REST 同步器（Arrow / GraphQL 导出 JSON → dict）。
+llm_call 保留完整对话（messages_in/out + thinking）——P2 经验演化的原料。
 """
 
 from datetime import UTC, datetime
@@ -28,6 +29,24 @@ def _iso(ns: int) -> str:
     return datetime.fromtimestamp(ns / 1e9, tz=UTC).isoformat()
 
 
+def _messages(attrs: dict, prefix: str) -> list[dict] | None:
+    """从拍平的 dotted key 里重组消息列表（llm.input_messages.N.message.role/content）。"""
+    idxs = {
+        int(k.split(".")[2])
+        for k in attrs
+        if k.startswith(f"{prefix}.") and k.endswith((".role", ".content"))
+    }
+    if not idxs:
+        return None
+    return [
+        {
+            "role": attrs.get(f"{prefix}.{i}.message.role"),
+            "content": attrs.get(f"{prefix}.{i}.message.content"),
+        }
+        for i in sorted(idxs)
+    ]
+
+
 def map_spans(spans: list[dict]) -> list[Event]:
     """按 start_ns 排序派生 seq + kind 映射。同批 span 全量重发 → 派生相同 seq（幂等根基）。"""
     events = []
@@ -39,7 +58,10 @@ def map_spans(spans: list[dict]) -> list[Event]:
                 {
                     "tokens_in": attrs.get("llm.token_count.prompt"),
                     "tokens_out": attrs.get("llm.token_count.completion"),
-                    "docgen": attrs.get("docgen"),  # call_site/轮次/重放摘要等领域负载
+                    "messages_in": _messages(attrs, "llm.input_messages"),
+                    "messages_out": _messages(attrs, "llm.output_messages"),
+                    "thinking": attrs.get("docgen.llm.thinking"),
+                    "call_site": attrs.get("docgen.llm.call_site"),
                 },
             )
         elif name.startswith("tool:"):

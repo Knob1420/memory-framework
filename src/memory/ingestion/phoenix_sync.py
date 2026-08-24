@@ -88,6 +88,32 @@ class PhoenixRestReader:
             )
         return spans
 
+    @staticmethod
+    def parse_export(content: bytes) -> list[dict]:
+        """Phoenix GraphQL 导出 JSON（v2 埋点，含消息/thinking）→ span dict 列表。
+
+        差异于 REST Arrow：attributes 是拍平的 dotted key（llm.input_messages.0...）、
+        时间戳是 ISO 字符串、文件头带 session_id/span_count。
+        样例：docs/example/export-otel-v2-thinking-think-rec-1.json
+        """
+        from datetime import datetime
+
+        d = json.loads(content)
+        spans = []
+        for s in d["spans"]:
+            ts = datetime.fromisoformat(s["start_time"])
+            spans.append(
+                {
+                    "trace_id": s["trace_id"],
+                    "name": s["name"],
+                    "span_id": s["span_id"],
+                    "parent_id": s.get("parent_id") or None,
+                    "start_ns": int(ts.timestamp() * 1e9),
+                    "attrs": {k: v for k, v in s.get("attributes", {}).items() if v is not None},
+                }
+            )
+        return spans
+
 
 class PhoenixSyncer:
     def __init__(self, storage: Storage, reader: PhoenixRestReader, cfg: Config):

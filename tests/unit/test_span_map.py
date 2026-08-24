@@ -24,7 +24,12 @@ def test_branches():
                 ns=1,
                 attrs={
                     "llm.token_count.prompt": 10720,
-                    "docgen": {"llm": {"call_site": "agent_loop.stage2"}},
+                    "docgen.llm.call_site": "agent_loop.stage2",
+                    "llm.input_messages.0.message.role": "user",
+                    "llm.input_messages.0.message.content": "开始",
+                    "llm.output_messages.0.message.role": "assistant",
+                    "llm.output_messages.0.message.content": "好的",
+                    "docgen.llm.thinking": "推理过程",
                 },
             ),
             _sp("tool:tool_save_plan", ns=2),
@@ -34,7 +39,10 @@ def test_branches():
     )
     assert [e.kind for e in events] == ["llm_call", "tool_call", "stage", "span.weird_thing"]
     assert events[0].data["tokens_in"] == 10720
-    assert events[0].data["docgen"]["llm"]["call_site"] == "agent_loop.stage2"
+    assert events[0].data["call_site"] == "agent_loop.stage2"
+    assert events[0].data["messages_in"] == [{"role": "user", "content": "开始"}]
+    assert events[0].data["messages_out"] == [{"role": "assistant", "content": "好的"}]
+    assert events[0].data["thinking"] == "推理过程"
     assert events[1].data["name"] == "tool_save_plan"
     assert events[3].data == {"_span": {"id": "01", "parent": None}}  # 透传无额外 attrs
 
