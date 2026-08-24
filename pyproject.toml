@@ -24,6 +24,8 @@ dev = [
     "ruff>=0.6",
     "pre-commit>=3.8",
 ]
+# 本地 embedding 服务（embed_server.py）不用 uv 环境跑——torch/FlagEmbedding 装在
+# conda env memory（与 MinerU 共用，torch 已就位），见 docs/environments.md
 
 [build-system]
 requires = ["hatchling"]

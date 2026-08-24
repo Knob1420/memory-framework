@@ -39,3 +39,28 @@ conda run -n mineru mineru -p 任意.pdf -o /tmp/mineru_test -b hybrid-engine
   - `mineru[all]` 的 torch cu130 依赖链不在阿里镜像（nvidia-*-cu13 轮子只在
     pypi.nvidia.com），建议先装 torch 再装 mineru[core]，或直接用本节官方命令
   - uv 装 vllm 大轮子偶发 mmap ENOMEM，换 pip 可绕
+
+## 本地 embedding 服务（bge-m3，独立进程）
+
+向量模型与 LLM 分端点部署（decisions.md）。bge-m3 ~568M 参数，fp16 推理占显存
+**~1.6 GB**（实测 L40）；跑在一台 L40 的零头上，与 MinerU 互不冲突。
+
+依赖（torch / FlagEmbedding / fastapi / uvicorn）都在 **conda env `memory`**——
+与 MinerU 共用，已装好，无需额外安装。
+
+```bash
+# 启动（repo 根目录；GPU 卡号按需改）
+CUDA_VISIBLE_DEVICES=0 conda run --no-capture-output -n memory \
+    env PYTHONPATH=src uvicorn memory.llm.embed_server:app --host 127.0.0.1 --port 8001
+
+# 验证
+curl -s http://127.0.0.1:8001/health
+
+# 主项目 .env 接入（注意 base_url 带 /v1，OpenAI SDK 在其后拼 /embeddings）
+EMBEDDING_BASE_URL=http://127.0.0.1:8001/v1
+EMBEDDING_MODEL=bge-m3
+EMBEDDING_DIM=1024
+```
+
+模型权重路径用环境变量 `EMBED_MODEL_PATH` 覆盖（默认本机 pretrain_model 下的 BAAI/bge-m3）。
+注意：FlagEmbedding 新版 `encode()` 不再收 `normalize_embeddings`，服务内自行 L2 归一化。
