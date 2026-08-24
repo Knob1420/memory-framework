@@ -3,6 +3,9 @@
 AI agent 记忆框架：跨 session 经验积累。agent 干过的活（文档、轨迹、代码）沉淀成可检索的记忆，
 下次干同样的活直接站在上次的肩膀上。首个落地场景：docgen（文档生成）与 codegen（代码生成）。
 
+和 RAG 的区别一句话：RAG 检索的是**人写好的静态文档**；这里的核心是**从 agent 自己的干活轨迹
+演化出经验**（L2 的 facts/scenes，带置信度、可被人工修正淘汰）——文档链（L1）只是地基。
+
 一句话技术形态：**FastAPI + 单 SQLite 文件（FTS5 + sqlite-vec）+ 后台演化线程**。部署即一个进程加一个数据目录。
 
 ## 设计思路
@@ -26,8 +29,9 @@ MinerU 跑一份 109 页 PDF 要 4 分钟——任何慢操作都不该占着 HT
 ### 统一信封
 
 事件是内部唯一格式：`{session_id, events: [{seq, ts, kind, data}]}`。
-两扇采集门殊途同归——TS 插件推 JSON 到 `/events`，OTel 体系走 OTLP receiver / Phoenix 拉取——
-都翻译成信封进同一个 `store_events`。kind 是开放枚举，未知 kind 收下落盘 + 警告。
+两条采集路殊途同归——TS 插件推 JSON 到 `/events`；docgen 的 agent 轨迹由 Phoenix 同步器
+定时拉回（span 树 → 信封，LLM 完整对话与思考过程都在内）——都进同一个 `store_events`。
+kind 是开放枚举，未知 kind 收下落盘 + 警告。
 
 ### workspace 隔离
 
@@ -37,20 +41,34 @@ codegen 和 docgen 的记忆物理分开（`data/<ws>/...`）+ 逻辑隔离（�
 ### 七模块
 
 ```
-transport（HTTP/OTLP 收发）   orchestrator（workspace 门）
+transport（HTTP 收发）        orchestrator（workspace 门）
 ingestion（外部格式→信封）     storage（唯一碰 SQL 的模块）
 evolution（L0→L1 演化，心脏）  llm（唯一外部模型出口）
-retrieval / injection（P1 step3 起开工）
+retrieval / injection（检索与注入，待开发）
 ```
 
-## 一份数据的旅程（doc 链）
+## 数据的旅程
+
+项目吃两种数据，各有一条链，汇于同一个 L0：
+
+**文档链**（上传的参考文档 → 可检索的 chunk）：
 
 ```
 curl /ingest_doc ─► gate 验 workspace ─► put_doc（hash 去重、落盘、插 pending）
   ─► 调度器 10s 轮询 ─► derive_doc ─► convert（markitdown / MinerU / libreoffice → md）
   ─► clean 七步清洗 ─► chunker（表格归一 → 标题骨架 → parent/child → 上下文注入）
   ─► embedder.embed ─► put_chunks（三表同写：本体+FTS+vec）─► mark_derived
-  ─►（step3 起）/search 命中 child → 回溯 parent 全文给 LLM
+  ─►（待开发）/search 命中 child → 回溯 parent 全文给 LLM
+```
+
+**事件链**（agent 干活的轨迹 → L0，P2 起演化为经验）：
+
+```
+docgen agent ──OTel──► Phoenix（他们的观测后端）◄── 每 5 分钟拉（REST/导出文件）
+                                        └─► 只导含 done 的完整 trace（失败运行不进记忆）
+              ──► span_map 翻译成信封（LLM 完整对话 + thinking + 工具调用全保留）
+              ──► store_events ──► data/<ws>/l0/session/<trace_id>.jsonl（append-only）
+TS 插件（codegen）──► POST /events（同一信封格式）──► 同一个 store_events
 ```
 
 ## 接口
@@ -61,9 +79,8 @@ curl /ingest_doc ─► gate 验 workspace ─► put_doc（hash 去重、落盘
 |---|---|---|---|
 | `/events` | POST | TS 插件推事件信封（JSON） | ✅ |
 | `/ingest_doc` | POST | 上传文档（multipart），hash 去重 | ✅ |
-| `/otlp/v1/traces` | POST | OTLP 接收（protobuf/JSON 双编码） | ✅ |
-| `/search` | POST | 检索（FTS+vec RRF 融合） | 计划 |
-| `/get/{id}` | GET | 取 chunk / parent 全文 | 计划 |
+| `/search` | POST | 检索（FTS+vec RRF 融合） | 待开发 |
+| `/get/{id}` | GET | 取 chunk / parent 全文 | 待开发 |
 
 全局约定：请求头 `X-Workspace` 必填；失败统一 `{"error": {code, message}}`；入库立即返回、派生异步。
 
@@ -88,7 +105,7 @@ curl /ingest_doc ─► gate 验 workspace ─► put_doc（hash 去重、落盘
 2. **影子表对调用方不存在**——FTS/vec 是 storage 的私事
 3. **storage 无 delete API**——记忆只能沉淀和淘汰，不能篡改
 4. **外部模型调用只出现在 `llm/` 包**——CI 的 mock 边界
-5. **span→信封映射只有 span_map.py 一个实现**——两扇门共享，禁止各自翻译
+5. **span→信封映射只有 span_map.py 一个实现**——所有数据源共享，禁止各自翻译
 6. 文件读写显式 `encoding="utf-8"`，路径一律 `pathlib`（跨 Windows/Linux 硬规则）
 
 完整决策记录（含被否掉的方案）：[docs/decisions.md](docs/decisions.md)。
@@ -104,8 +121,9 @@ uv run uvicorn memory.main:app   # 启动（调度器/Phoenix 同步随进程自
 关键环境变量：`LLM_BASE_URL/MODEL`（OpenAI 兼容）、`EMBEDDING_BASE_URL/MODEL/DIM`（本地部署的
 OpenAI 兼容端点；**维度建表时定死，换模型 = 重建向量表**）。
 
-PDF/图片转换依赖 MinerU（独立 conda 环境，可选）：安装见 [docs/environments.md](docs/environments.md)。
-不装不影响其他格式，pdf/image 派生失败留痕。
+PDF/图片转换依赖 MinerU（PDF/图片 → markdown 的转换工具，独立 conda 环境，可选）：
+安装见 [docs/environments.md](docs/environments.md)。不装不影响其他格式，pdf/image 派生失败留痕。
+本地 embedding 服务（bge-m3，显存 ~1.6GB）同见该文档。
 
 提交前本地跑全 CI 序列：
 
@@ -135,9 +153,9 @@ data/           运行时数据（gitignore）
 
 | 阶段 | 内容 | 状态 |
 |---|---|---|
-| P0 | 采集链全通（两扇门 + Phoenix 拉取）、L0、契约 | ✅ |
-| P1 | doc 链：转换/清洗/分块/派生/调度器 | ✅ |
-| P1 step3 | 检索口：search_docs + /search /get | 🔜 |
-| P2 | L2：TraceDeriver、facts/scenes 演化 | |
+| P0 | 采集链全通（/events + Phoenix 拉取）、L0、契约 | ✅ |
+| P1 | doc 链：转换/清洗/分块/派生/调度器 + embedding 服务 | ✅ |
+| 检索口 | search_docs + /search /get | 🔜 下一步 |
+| P2 | L2：TraceDeriver、facts/scenes 演化（事件链的消费端） | |
 | P3 | codegen 链：code_graph、repo 采集 | |
-| P4 | TS 插件（队友）、注入链 | |
+| P4 | TS 插件、注入链 | |
