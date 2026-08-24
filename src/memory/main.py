@@ -20,20 +20,22 @@ def create_app(cfg: Config | None = None) -> FastAPI:
     app.state.workspaces = cfg.workspaces  # OTLP receiver 自查注册表用
 
     from memory.transport.events import router as events_router
-    from memory.transport.otlp_receiver import router as otlp_router
 
     app.include_router(events_router)
-    app.include_router(otlp_router)
 
     @app.get("/health")
     def health() -> dict:
         return {"status": "ok"}
 
-    if cfg.phoenix_dsn:  # 拉型采集：配置了 dsn 才启动同步线程
-        from memory.ingestion.phoenix_sync import PhoenixReader, PhoenixSyncer
+    if cfg.phoenix_url:  # 拉型采集：配置了 url 才启动同步线程
+        from memory.ingestion.phoenix_sync import PhoenixRestReader, PhoenixSyncer
 
-        syncer = PhoenixSyncer(app.state.storage, PhoenixReader(cfg.phoenix_dsn), cfg)
-        threading.Thread(target=syncer.run, daemon=True, name="phoenix-sync").start()
+        reader = PhoenixRestReader(cfg.phoenix_url, cfg.phoenix_project)
+        threading.Thread(
+            target=PhoenixSyncer(app.state.storage, reader, cfg).run,
+            daemon=True,
+            name="phoenix-sync",
+        ).start()
 
     # 演化调度器：pending 池 → L1（derive_doc 链）
     from memory.evolution.scheduler import run as run_scheduler

@@ -14,8 +14,7 @@
 | storage L0 实现 | 方法实现与 jsonl/l0_records 落盘 | §4 |
 | TS 插件（opencode 侧） | 抓事件 → 翻译 → 推送，curl 即可自测，不依赖 memory 代码 | §1 |
 | /events、/ingest_doc 端点 + ingestion 服务 | 端点薄壳 + store_events | §2、§3、§4 |
-| OTLP receiver（docgen/langgraph 数据接入） | 收 OTel 流 → 翻译成信封 → 同一 ingestion 入口 | §5、otel-mapping.md |
-| docgen 侧 collector 配置 | 加一个 exporter 指向 memory | §5 |
+| Phoenix 同步器（docgen 数据接入，REST 拉型） | 拉 span → 翻译成信封 → 同一 ingestion 入口 | §5、otel-mapping.md |
 
 ---
 
@@ -154,74 +153,45 @@ class L0Record:
 
 ---
 
-## §5 OTLP receiver（push 型，已实现、待命）
+## §5 docgen 采集：Phoenix 同步器（拉型，REST 版）
 
-docgen 侧统一 OTel 格式 + OTel SDK 传输。**当前实际接入走拉型（见下）**，receiver
-在对方配 collector 或 SDK 直发时启用——两路产出同一信封，汇于同一 store_events。
+> 2026-08-24：OTLP receiver **已删除**（decisions.md）。真实数据核验发现 docgen 的 span
+> 直落 Phoenix 服务端、永不走 OTLP 推送——receiver 无真实消费者，protobuf 路也无法验证，
+> 预留代码成了纯负担。将来若出现直推 OTLP 的 agent，按 git 历史恢复即可。
 
-### 链路（push 型启用时）
-
-```
-docgen (OTel SDK) → OTLP → collector → Phoenix（他们现有观测后端，是 sink 不转发）
-                              └──exporter──→ memory POST /otlp/v1/traces
-```
-
-### 当前实际链路：Phoenix 同步器（拉型）
+### 链路
 
 ```
-docgen SDK ──OTLP/protobuf──→ Phoenix（postgres 库）←── 只读账号，每5分钟拉
-                                     └────────→ PhoenixSyncer → 信封 → store_events
+docgen SDK ──OTLP──→ Phoenix 服务端 ←── REST POST /v1/spans（Arrow IPC 响应），每 5 分钟拉
+                                     └──→ PhoenixRestReader → span_map → 信封 → store_events
 ```
 
-docgen 侧成本 = 一个只读数据库账号。规则：只导含 done 的完整 trace、按 trace_id
-全量一次导入；水位存 data/<ws>/phoenix_sync.json（last_id + incomplete 名单）。
+docgen 侧成本 = 一个 HTTP 地址，**零账号零改动**（原 psycopg 读库方案因账号卡点被替代）。
 
-### 端点
-
-```
-POST /otlp/v1/traces
-Content-Type: application/x-protobuf   ← 默认
-                 application/json      ← OTLP/JSON，开发期可要求 docgen 配此编码
-```
-
-protobuf 解析用官方 `opentelemetry-proto` 包的生成类，不手写解析。
-
-### 翻译（receiver 内部完成，规则冻结于 otel-mapping.md）
+### REST 接口
 
 ```
-resource.service.name  → workspace（同样过注册表校验）
-trace_id               → session_id（注意：一个请求可能混装多个 trace，
-                          须按 trace_id 分组，每组各调一次 store_events）
-span 按 startTime 排序  → 派生 seq（幂等由此成立：重发批次派生出相同 seq，
-                          被 ingestion 的 seq 集合判重，receiver 无状态）
-name="done" 的 span     → session_end 事件
-span name/attributes   → kind（对照表见 otel-mapping.md）
+POST /v1/spans?project_name=<project>
+Content-Type: application/json
+{"queries": [{}], "limit": 1000}
+→ 200 application/x-pandas-arrow（Arrow IPC，pyarrow 三行解码成 DataFrame）
 ```
 
-**产出与 §1 同一信封**：翻译完直接构造 §2 的 Event/EventsRequest pydantic 类
-（不拼 dict——构造即校验，两门产出同类型由类型系统保证），
-调用同一个 `ingestion.store_events`——ingestion 不感知 OTLP 的存在。
+行结构样例：docs/example/docgen-real-tc03-spans.arrow（901 span / 16 trace）。
+列即展平的 span：name / context.trace_id / context.span_id / parent_id /
+start_time / attributes.*（含领域负载 attributes.docgen）。
 
-### 响应（注意：不是 JSON）
+### 翻译规则
 
-成功 = HTTP 200 + **空 protobuf** `ExportTraceServiceResponse`——OTLP 协议规定，
-collector 靠它确认；返回 JSON 会被当协议错误反复重发。
-解析失败 / service.name 未注册 = 400（collector 记日志丢弃，不重试）。
+冻结于 [otel-mapping.md](otel-mapping.md)，实现唯一：`ingestion/span_map.py`。
+词表已对 tc03 真实数据核对：`llm_call`→llm_call（tokens 取 llm.token_count.*）、
+`tool:*`→tool_call、`done`→session_end、stage 名单 11 个全量在册、其余透传 `span.<name>`。
 
-### receiver 纪律
+### 核心规则（不变）
 
-receiver 属于 transport 层：只做协议解析 + 翻译 + 调 ingestion，
-不解析 kind 语义、不碰 SQL、不调 LLM。
+**只导含 done 的完整 trace，按 trace 一次成型**：seq 从 trace 全量派生（分轮增量导入
+会 seq 撞车 → 幂等误杀）；崩溃重导 → 相同 seq → store_events 幂等去重。
+水位 = 已导 trace_id 名单，存 data/<ws>/phoenix_sync.json（人可改，删掉即重拉）。
 
----
-
-## P0 验收
-
-```
-插件(或 curl 模拟)推一批事件 → /events → {stored:N, duplicates:0}
-重发同一批                     → /events → {stored:0, duplicates:N}
-最后一批含 session_end         → data/<ws>/l0/session/<id>.jsonl 48 行
-                                + l0_records 出现一行 pending
-/ingest_doc 上传同一文件两次   → 第二次 hash_hit=true
-OTLP/JSON 样例 trace 发 receiver → 同样落成 jsonl + pending（与 /events 产物同构）
-```
+ponytail: REST 无增量游标，每轮全量拉 limit=1000 再按名单跳过——tc03 量级够用；
+量级上来后换服务端时间过滤（queries.filter 语法待验证）。

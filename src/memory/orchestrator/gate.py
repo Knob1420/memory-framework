@@ -11,8 +11,7 @@ EXEMPT_PATHS = {
     "/health",
     "/docs",
     "/openapi.json",
-    "/otlp/v1/traces",
-}  # 免检清单（OTLP 无 X-Workspace 头，receiver 自查）
+}  # 免检清单
 
 
 def workspace_gate(workspaces: list[str]):

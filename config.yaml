@@ -2,10 +2,11 @@
 # P1 起名单长成组件注册表（见 docs/contracts/components.md 的 yaml 结构）。
 workspaces: [codegen, docgen]
 
-# Phoenix 同步（拉型采集，docgen 数据源）。dsn 为空则不启动。
-# 拿到只读账号后填：postgres://memory_reader:xxx@<host>:5432/<dbname>
+# Phoenix 同步（拉型采集 REST 版，docgen 数据源）。url 为空则不启动。
+# 填 docgen 侧 Phoenix 地址，如 http://10.x.x.x:6006
 phoenix:
-  dsn: ""
+  url: ""
+  project: docgen-real-tc03
   interval_s: 300
   start_from: all    # all=吃历史（facts 冷启动原料） | now=只收新的
 

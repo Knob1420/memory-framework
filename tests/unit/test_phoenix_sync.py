@@ -1,48 +1,42 @@
-"""Phoenix 同步器（FakeReader，不碰真库）：完整/半截会话、水位、崩溃重导幂等。
+"""Phoenix 同步器 REST 版：完整/半截 trace、水位跳过、崩溃重导幂等 + 真实样例回归。
 
-真库的行归一化（PhoenixReader._row）依赖真实 schema，拿到只读账号后另行验证——
-这里测的是同步器的调度逻辑（分组/水位/全量导入）。
+FakeReader 喂合成 span 测调度逻辑；真实 tc03 arrow 样例（901 span / 16 trace）
+走 parse_arrow 全链路——15 条含 done 导入、1 条单 span trace 挂起。
 """
 
 import json
+from pathlib import Path
 
 import pytest
 
 from memory.config import Config
-from memory.ingestion.phoenix_sync import PhoenixSyncer
+from memory.ingestion.phoenix_sync import PhoenixRestReader, PhoenixSyncer
 from memory.ingestion.service import _seq_cache
 from memory.storage.engine import Storage
 
+SAMPLE = Path(__file__).parents[2] / "docs/example/docgen-real-tc03-spans.arrow"
+
 
 class FakeReader:
-    """模拟 Phoenix 库：内部一个自增 id 的行表。"""
+    """fetch_spans 契约的最小替身：内部一个可追加的 span 表。"""
 
     def __init__(self):
         self.rows: list[dict] = []
-        self._next = 1
 
     def add(self, trace_id, name, ns):
         self.rows.append(
             {
-                "id": self._next,
                 "trace_id": trace_id,
                 "name": name,
-                "span_id": f"s{self._next:04x}",
+                "span_id": f"s{len(self.rows) + 1:04x}",
                 "parent_id": None,
                 "start_ns": ns,
                 "attrs": {},
             }
         )
-        self._next += 1
 
-    def new_spans(self, last_id):
-        return [r for r in self.rows if r["id"] > last_id]
-
-    def trace_spans(self, trace_id):
-        return [r for r in self.rows if r["trace_id"] == trace_id]
-
-    def max_id(self):
-        return self._next - 1
+    def fetch_spans(self, limit=1000):
+        return list(self.rows)
 
 
 @pytest.fixture
@@ -61,7 +55,7 @@ def test_incomplete_then_complete(env):
     reader.add("T1", "llm_call", ns=1)  # 第一轮：半截，无 done
     imported, held = syncer.poll_once()
     assert (imported, held) == (0, 1)
-    assert store.pending() == []  # 未导：jsonl 无、表无行
+    assert store.pending() == []
 
     reader.add("T1", "done", ns=2)  # 第二轮：done 到了
     imported, held = syncer.poll_once()
@@ -71,36 +65,61 @@ def test_incomplete_then_complete(env):
     assert [r.id for r in store.pending()] == ["T1"]
 
 
-def test_watermark_no_rescan(env):
-    store, reader, syncer, _tmp = env
-    reader.add("T1", "llm_call", ns=1)
-    reader.add("T1", "done", ns=2)
-    syncer.poll_once()
-    before = len(store.read_session("docgen", "T1"))
-    assert syncer.poll_once() == (0, 0)  # 无新 span：不重导、不重查
-    assert len(store.read_session("docgen", "T1")) == before
-
-
-def test_crash_reimport_idempotent(env):
-    """崩溃在导入后、存水位前 → 重跑同轮 → 全量重导 → seq 相同 → 幂等去重。"""
+def test_watermark_skip_and_idempotent(env):
+    """已导 trace 跳过；水位丢了重导 → seq 相同 → 幂等不翻倍。"""
     store, reader, syncer, tmp = env
     reader.add("T1", "llm_call", ns=1)
-    reader.add("T1", "tool", ns=2)
+    reader.add("T1", "tool:tool_x", ns=2)
     reader.add("T1", "done", ns=3)
-    syncer.poll_once()
-    # 模拟崩溃：水位回退到导入前
-    state = json.loads((tmp / "docgen/phoenix_sync.json").read_text(encoding="utf-8"))
-    state["last_id"] = 0
-    (tmp / "docgen/phoenix_sync.json").write_text(json.dumps(state), encoding="utf-8")
-    syncer2 = PhoenixSyncer(store, reader, Config(data_dir=tmp))
-    syncer2.poll_once()
+    assert syncer.poll_once() == (1, 0)
+
+    # 已导：每轮全量拉回但按 imported 名单跳过
+    assert syncer.poll_once() == (0, 0)
+    assert len(store.read_session("docgen", "T1")) == 3
+
+    # 模拟崩溃：水位回退 → 重导 → 幂等去重
+    state_path = tmp / "docgen/phoenix_sync.json"
+    (tmp / "docgen").mkdir(exist_ok=True)
+    state_path.write_text(json.dumps({"imported": []}), encoding="utf-8")
+    PhoenixSyncer(store, reader, Config(data_dir=tmp)).poll_once()
     assert len(store.read_session("docgen", "T1")) == 3  # 没有翻倍
     assert len(store.pending()) == 1
 
 
-def test_state_file_shape(env):
-    _, reader, syncer, tmp = env
+def test_start_from_now_skips_history(tmp_path):
+    _seq_cache.clear()
+    store = Storage(Config(data_dir=tmp_path))
+    reader = FakeReader()
     reader.add("T1", "llm_call", ns=1)
-    syncer.poll_once()
-    state = json.loads((tmp / "docgen/phoenix_sync.json").read_text(encoding="utf-8"))
-    assert state == {"last_id": 1, "incomplete": ["T1"]}  # 人可读可手改（重置重拉=编辑它）
+    reader.add("T1", "done", ns=2)
+    cfg = Config(data_dir=tmp_path)
+    cfg.phoenix_start_from = "now"
+    assert PhoenixSyncer(store, reader, cfg).poll_once() == (0, 0)  # 首见即跳过
+    reader.add("T2", "done", ns=3)
+    assert PhoenixSyncer(store, reader, cfg).poll_once() == (1, 0)  # 新的照收
+
+
+def test_real_tc03_sample(tmp_path):
+    """真实样例全链路：Arrow 解码 → 分组 → 14 导入 / 2 挂起。
+
+    挂起的 2 条：1 个单 span "run docgen" + 1 条 46 span 中途失败的运行（无 done）——
+    "只导完整 trace"规则在真实数据上正确拒绝半截会话。
+    """
+    _seq_cache.clear()
+    store = Storage(Config(data_dir=tmp_path))
+    spans = PhoenixRestReader.parse_arrow(SAMPLE.read_bytes())
+    assert len(spans) == 901
+
+    reader = FakeReader()
+    reader.rows = spans
+    syncer = PhoenixSyncer(store, reader, Config(data_dir=tmp_path))
+    imported, held = syncer.poll_once()
+    assert (imported, held) == (14, 2)
+
+    sessions = store.pending()
+    assert len(sessions) == 14
+    # 抽查一条：kind 词表、树、排序全对
+    events = store.read_session("docgen", sessions[0].id)
+    kinds = {e.kind for e in events}
+    assert "session_end" in kinds and "llm_call" in kinds and "tool_call" in kinds
+    assert [e.seq for e in events] == sorted(e.seq for e in events)

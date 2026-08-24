@@ -1,8 +1,9 @@
 # OTel span → 事件信封映射规则
 
-> **消费者：OTLP receiver（push 型）与 Phoenix 同步器（拉型，当前实际路径）**。
+> **消费者：Phoenix 同步器（REST 拉型，唯一路径）**。
+> （OTLP receiver 已于 2026-08-24 删除——docgen 数据直落 Phoenix，永不推送，见 decisions.md。）
 > 翻译结果是统一事件信封（见 http-api.md 事件信封一节）。
-> 统一实现位于 src/memory/ingestion/span_map.py，两个适配器喂数据，不允许第三份实现。
+> 统一实现位于 src/memory/ingestion/span_map.py，词表已对 tc03 真实数据（901 span）核对。
 
 ## 结构映射（五条）
 
@@ -18,10 +19,11 @@
 
 | OTel span | 信封 kind | data 内容 |
 |---|---|---|
-| `name="llm_call"` | `llm_call` | {stage, tokens_in, tokens_out} ← gen_ai.usage.* |
-| `name="tool"` | `tool_call` | {name} ← tool.name 属性 |
-| stage 型 span（parse_template/summary/plan/stage2_loop/...） | `stage` | {name} |
+| `name="llm_call"` | `llm_call` | {tokens_in, tokens_out, docgen} ← llm.token_count.* / attributes.docgen |
+| `name="tool:*"` | `tool_call` | {name} ← span 名的 tool: 后缀 |
+| stage 型 span（11 个名单，tc03 全量核对） | `stage` | {name} |
 | `name="done"` | `session_end` | {} |
+| 其余 | `span.<name>` | attrs 原样透传（kind 开放枚举） |
 
 ## span 树关系的保留
 

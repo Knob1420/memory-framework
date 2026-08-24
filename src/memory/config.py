@@ -45,8 +45,9 @@ class Config:
     mineru_effort: str = "medium"
     mineru_lang: str = "ch"
 
-    # Phoenix 同步（拉型采集，docgen 数据源）。dsn 为空则不启动。
-    phoenix_dsn: str = field(default_factory=lambda: os.environ.get("PHOENIX_DSN", ""))
+    # Phoenix 同步（拉型采集，REST 版）。url 为空则不启动。
+    phoenix_url: str = field(default_factory=lambda: os.environ.get("PHOENIX_URL", ""))
+    phoenix_project: str = "docgen-real-tc03"
     phoenix_workspace: str = "docgen"
     phoenix_interval_s: int = 300
     phoenix_start_from: str = "all"  # all=吃历史 | now=只收新的
@@ -64,7 +65,8 @@ def load_config() -> Config:
             cfg.workspaces = raw["workspaces"]
         if isinstance(raw.get("phoenix"), dict):
             p = raw["phoenix"]
-            cfg.phoenix_dsn = p.get("dsn", cfg.phoenix_dsn)
+            cfg.phoenix_url = p.get("url", cfg.phoenix_url)
+            cfg.phoenix_project = p.get("project", cfg.phoenix_project)
             cfg.phoenix_interval_s = int(p.get("interval_s", cfg.phoenix_interval_s))
             cfg.phoenix_start_from = str(p.get("start_from", cfg.phoenix_start_from))
         if isinstance(raw.get("mineru"), dict):

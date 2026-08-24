@@ -40,3 +40,12 @@
 - 2026-08-23 embedding 与 LLM 分端点部署：EmbeddingClient 独立 base_url（本地部署的 OpenAI 兼容
   /v1/embeddings，vLLM/TEI 等），LLM 走 OpenAI API；维度校验仍在写库前拦截。deriver 只依赖
   embedder.embed（鸭子类型），FakeEmbedding 替身测试。
+- 2026-08-24 OTLP receiver 删除：真实 tc03 数据核验发现 docgen 的 span 经 SDK 直落 Phoenix 服务端、
+  永不走 OTLP 推送——receiver 无真实消费者，protobuf 路也无法验证，预留代码是纯负担。
+  将来出现直推 OTLP 的 agent 时按 git 历史恢复。两扇门变一扇：/events（TS 插件）+ Phoenix 拉。
+- 2026-08-24 Phoenix 采集改 REST（替代 psycopg 读库）：POST /v1/spans 返回 Arrow IPC
+  （application/x-pandas-arrow，Phoenix 官方设计），HTTP 即取、无需数据库只读账号（原方案卡点消除）。
+  水位从 last_id+incomplete 改为已导 trace_id 名单（REST 无增量游标，每轮全量拉 limit=1000
+  再按名单跳过；量级上来后换服务端时间过滤）。span_map 词表对真实数据核对修正：
+  tool:* 前缀（非裸 tool）、tokens 取 llm.token_count.*（非 gen_ai.*）、llm_call 保留 docgen 负载。
+  真实样例回归：14/16 trace 导入，2 条无 done 的半截 trace（含 46 span 中途失败运行）正确拒绝。

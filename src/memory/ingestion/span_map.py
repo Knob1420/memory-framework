@@ -1,15 +1,14 @@
 """span → 信封事件的统一映射（otel-mapping.md 的唯一实现，不允许第二份）。
 
 输入是归一化的 span dict：{name, span_id, parent_id, start_ns, attrs}。
-两个适配器喂数据：OTLP receiver（protobuf Span→dict）、Phoenix 同步器（数据库行→dict）。
+适配器：Phoenix REST 同步器（Arrow 行→dict）。词表已对真实 tc03 数据核对。
 """
 
 from datetime import UTC, datetime
 
 from memory.ingestion.models import Event
 
-# ponytail: stage 名单来自 exp-016 单样本，待与 docgen 确认；
-# 候选方案是删掉本名单、非锚点全走透传 span.<name>（讨论中未拍板）
+# 11 个 stage 名全部出现在 tc03 真实数据中（2026-08-24 核对）
 _KNOWN_STAGES = {
     "parse_template",
     "wait_parse_review",
@@ -38,13 +37,13 @@ def map_spans(spans: list[dict]) -> list[Event]:
             kind, data = (
                 "llm_call",
                 {
-                    "stage": attrs.get("stage"),
-                    "tokens_in": attrs.get("gen_ai.usage.input_tokens"),
-                    "tokens_out": attrs.get("gen_ai.usage.output_tokens"),
+                    "tokens_in": attrs.get("llm.token_count.prompt"),
+                    "tokens_out": attrs.get("llm.token_count.completion"),
+                    "docgen": attrs.get("docgen"),  # call_site/轮次/重放摘要等领域负载
                 },
             )
-        elif name == "tool":
-            kind, data = "tool_call", {"name": attrs.get("tool.name")}
+        elif name.startswith("tool:"):
+            kind, data = "tool_call", {"name": name[5:]}
         elif name == "done":
             kind, data = "session_end", {}
         elif name in _KNOWN_STAGES:
