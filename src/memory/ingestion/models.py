@@ -1,6 +1,6 @@
 """信封与 kind 词汇表：事件采集的公共数据格式。
 
-契约：docs/contracts/http-api.md（事件信封与透传约定）。
+契约：docs/http-api.md（事件信封与透传约定）。
 kind 开放枚举——未知值收下落盘（transport 层打警告），此处不做取值校验。
 """
 

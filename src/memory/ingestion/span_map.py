@@ -1,4 +1,4 @@
-"""span → 信封事件的统一映射（otel-mapping.md 的唯一实现，不允许第二份）。
+"""span → 信封事件的统一映射（docs/phoenix-sync.md 的唯一实现，不允许第二份）。
 
 输入是归一化的 span dict：{name, span_id, parent_id, start_ns, attrs}。
 适配器：Phoenix REST 同步器（Arrow / GraphQL 导出 JSON → dict）。

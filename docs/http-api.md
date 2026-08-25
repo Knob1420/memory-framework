@@ -113,7 +113,7 @@ opencode prompt hook 与 docgen plan 编排层调用的都是它。
 | `session_end` | 会话结束（触发演化） | 无 | |
 
 > 状态：**待与队友定稿**（TS 插件按此表组装；TraceDeriver 按此表解释）。
-> Phoenix 路径的翻译见 [otel-mapping.md](otel-mapping.md)。
+> Phoenix 路径的翻译见 [phoenix-sync.md](phoenix-sync.md)。
 
 ### TS 插件五条职责
 

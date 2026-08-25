@@ -1,5 +1,5 @@
 # P0：workspace 名单（编排门注册表）+ Phoenix 同步配置。
-# P1 起名单长成组件注册表（见 docs/contracts/components.md 的 yaml 结构）。
+# P1 起名单长成组件注册表（见 docs/components.md 的 yaml 结构）。
 workspaces: [codegen, docgen]
 
 # Phoenix 同步（拉型采集 REST 版，docgen 数据源）。url 为空则不启动。

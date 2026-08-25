@@ -1,7 +1,7 @@
 """编排门：所有请求的统一准入关卡。
 
 只做三件事：X-Workspace 有没有、认不认识、挂 request.state.workspace。
-端点个性的解析在 transport，共性的关卡在这里（见 docs/contracts/http-api.md）。
+端点个性的解析在 transport，共性的关卡在这里（见 docs/http-api.md）。
 """
 
 from fastapi import Request

@@ -73,7 +73,7 @@ TS 插件（codegen）──► POST /events（同一信封格式）──► �
 
 ## 接口
 
-### HTTP（签名冻结于 [docs/contracts/http-api.md](docs/contracts/http-api.md)）
+### HTTP（签名冻结于 [docs/http-api.md](docs/http-api.md)）
 
 | 端点 | 方法 | 作用 | 状态 |
 |---|---|---|---|
@@ -84,7 +84,7 @@ TS 插件（codegen）──► POST /events（同一信封格式）──► �
 
 全局约定：请求头 `X-Workspace` 必填；失败统一 `{"error": {code, message}}`；入库立即返回、派生异步。
 
-### storage（签名冻结于 [docs/contracts/storage.md](docs/contracts/storage.md)）
+### storage（签名冻结于 [docs/storage.md](docs/storage.md)，接口+表结构）
 
 按动词记，不背方法名：
 
@@ -135,10 +135,13 @@ uv run ruff check . && uv run ruff format --check . && uv run pytest -q
 
 ```
 src/memory/     七模块源码
-docs/contracts/ 契约（http-api / storage / otel-mapping / components）
-docs/schema/    表结构
-docs/design/    总体方案、文档转换方案
+docs/总体方案.md    架构与实例接入（最完整的入门文档）
+docs/http-api.md   HTTP 契约 + 事件信封/kind 词汇表
+docs/storage.md    storage 接口 + 表结构
+docs/phoenix-sync.md  Phoenix 采集与 span→信封映射
+docs/components.md 可插拔组件（P2+ 草案：触发条件，非契约）
 docs/decisions.md  决策记录（模糊时先翻这里）
+docs/文档转换方案.md  格式转换矩阵与实测数据
 data/           运行时数据（gitignore）
 ```
 
@@ -146,7 +149,7 @@ data/           运行时数据（gitignore）
 
 - **main 常绿**：CI 红了优先修，再开新分支
 - **PR 必须互审**：两人团队，互审是知识同步机制，不是质检
-- 改接口/schema 的 PR 必须同时改 `docs/contracts/` 或 `docs/schema/`（契约随代码版本走）
+- 改接口/schema 的 PR 必须同时改 `docs/http-api.md` / `docs/storage.md`（契约随代码版本走）
 - commit 前缀：`transport / orchestrator / retrieval / injection / ingestion / evolution / storage / components / llm / docs / ci`
 
 ## 路线图
