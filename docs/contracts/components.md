@@ -2,12 +2,16 @@
 
 > 场景组件实现 Protocol + yaml 注册，**不继承任何基类、不 import 框架内部**。
 > 场景代码只依赖本文件定义的协议和 storage 的公共 dataclass。
+>
+> **实现状态**：全部为 P2+ 规划，尚未实现。当前 docgen 采集走框架内置的 Phoenix
+> 同步器（拉型，见 otel-mapping.md），codegen 插件直推 /events 信封——两者都不需要
+> 自定义 EventHandler；该协议留给"事件格式需要现场翻译"的接入场景。
 
 ## 五个 Protocol
 
 ```python
 class EventHandler(Protocol):
-    """L0 事件流接收，输出统一为 OTel span。"""
+    """L0 事件流接收（事件格式需现场翻译的场景）。"""
 
     def handle(self, event: dict) -> None: ...
     def session_done(self) -> L0Record | None: ...  # 返回待入库的 session，无则 None
@@ -50,13 +54,11 @@ class L2Merger(Protocol):
 # config.yaml
 workspace: docgen
 components:
-  event_handler: otel.Receiver                # OTLP receiver（docgen 路径）
   l1_derivers:
     - core.DocChunkDeriver                    # 通用库（框架自带）
     - docgen.DocgenSummaryCacher              # 场景组件（docgen 侧实现）
+workspace: codegen
 components:
-  workspace: codegen
-  event_handler: codegen.OpencodeEventHandler
   l1_derivers:
     - core.CodeAstDeriver
     - core.CodeWikiDeriver
@@ -64,12 +66,14 @@ components:
 
 新 agent 接入 = 实现协议 + yaml 一行注册，框架本体不变。
 
-## 现有组件清单
+## 组件清单（规划）
 
 | 组件类型 | 通用库（core） | docgen 场景 | codegen 场景 |
 |---|---|---|---|
-| EventHandler | — | —（走 OTLP receiver） | OpencodeEventHandler |
+| EventHandler | — | —（Phoenix 拉取，框架内置） | —（直推 /events 信封） |
 | L0Processor | DocProcessor / CodeProcessor | — | — |
-| L1Deriver | DocChunkDeriver / CodeAstDeriver / CodeWikiDeriver / TraceDeriver | DocgenSummaryCacher | — |
+| L1Deriver | DocChunkDeriver✅ / CodeAstDeriver / CodeWikiDeriver / TraceDeriver | DocgenSummaryCacher | — |
 | L2Extractor | TraceFactsExtractor（复用） | ← 复用 core | ← 复用 core |
 | L2Merger | SceneUpdater（复用） | ← 复用 core | ← 复用 core |
+
+（✅ = 已实现，即 evolution/doc/deriver.py；其余规划中）

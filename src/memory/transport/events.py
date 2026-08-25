@@ -1,4 +1,4 @@
-"""采集端点：/events（事件流）+ /ingest_doc（文件）——p0-contract §2。
+"""采集端点：/events（事件流）+ /ingest_doc（文件）——契约 docs/contracts/http-api.md。
 
 transport 层纪律：解析 → 调服务/storage → 透传。不 SQL、不 LLM、不重复校验 workspace
 （编排门已做，从 request.state.workspace 取）。

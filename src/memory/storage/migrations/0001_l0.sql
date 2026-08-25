@@ -1,4 +1,4 @@
--- 0001: L0 层（p0-contract §4 / docs/schema/schema.md）
+-- 0001: L0 层（契约 docs/contracts/storage.md / 表结构 docs/schema/schema.md）
 CREATE TABLE IF NOT EXISTS l0_records (
     id            TEXT PRIMARY KEY,     -- session 类型直接用 session_id
     type          TEXT NOT NULL,        -- 'doc' | 'code' | 'session'

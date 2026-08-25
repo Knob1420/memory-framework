@@ -8,7 +8,7 @@
 
 | 项 | 约定 | 理由 |
 |---|---|---|
-| workspace | 请求头 `X-Workspace: <name>`，必填 | 将来 OTLP 的 service.name 映射到同一概念 |
+| workspace | 请求头 `X-Workspace: <name>`，必填 | 场景隔离的对外表现（codegen / docgen） |
 | 成功响应 | 直接返回数据本体，不包信封 | 失败有专用格式 |
 | 失败响应 | `{"error": {"code": "...", "message": "..."}}` | code 机器可判，message 给人/agent |
 | 鉴权 | v0 无（本机）；预留 `X-Api-Key` 头 | 对外开放时再加 |
@@ -113,7 +113,34 @@ opencode prompt hook 与 docgen plan 编排层调用的都是它。
 | `session_end` | 会话结束（触发演化） | 无 | |
 
 > 状态：**待与队友定稿**（TS 插件按此表组装；TraceDeriver 按此表解释）。
-> OTel 路径的翻译见 [otel-mapping.md](otel-mapping.md)。
+> Phoenix 路径的翻译见 [otel-mapping.md](otel-mapping.md)。
+
+### TS 插件五条职责
+
+1. session_id 全程不变（会话开始生成 uuid）
+2. seq 单调递增（可重复、不可跳号——跳号 = 丢事件）
+3. 本地攒批（10 条或 30 秒）再发
+4. 失败整批重发，**无需记录哪些成功过**（幂等键 (session_id, seq)，重复返回 duplicates 不报错）
+5. 会话结束（退出/idle）必发 `kind: "session_end"`——**不发则数据永不进入演化**
+
+### 透传约定（核心映射 + 其余透传，零信息丢失）
+
+上表核心 kind 之外，opencode 其余事件**不丢弃，按本约定透传**：
+
+```
+认识的：kind = 标准kind，data = 提炼后的字段（按上表 schema）
+不认识：kind = "opencode.<opencode原生事件名>"，data = 原事件整个 JSON 原样
+```
+
+插件实现即一张小映射表 + 一个兜底：
+
+```ts
+kind = KIND_MAP[opencodeEvent.name] ?? `opencode.${opencodeEvent.name}`
+```
+
+- L0 全量落盘，筛与不筛推迟到消费端（TraceDeriver 把透传事件折叠为统计行）
+- 某类透传事件被证明重要后，晋升为正式 kind = 插件映射表加一行（词汇表自进化）
+- 透传事件同样有 seq/session_id，遵守同一幂等规则
 
 ### POST /ingest_doc（multipart）
 

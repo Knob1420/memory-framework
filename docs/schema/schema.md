@@ -3,6 +3,9 @@
 > SQLite 单文件，FTS5（自带）+ sqlite-vec（扩展）。
 > 共 9 张主表 + 影子表。影子表（`*_fts` / `*_vec`）由 StorageEngine 在写入主表时同步维护，
 > 业务代码不可见、不可直接访问。
+>
+> **实现状态**：全量设计，分阶段落地。当前已建 **2 张**（l0_records、doc_chunks），
+> 每张表的标题行标注所属阶段（✅ = 已实现并有真实数据跑通）。
 
 ## 全局约定
 
@@ -15,7 +18,7 @@
 
 ## L0 层
 
-### l0_records — L0 万物元数据（异步管线的调度锚点）
+### l0_records — L0 万物元数据（异步管线的调度锚点）`✅ 0001_l0.sql`
 
 ```sql
 CREATE TABLE l0_records (
@@ -43,7 +46,7 @@ CREATE INDEX idx_l0_state ON l0_records(type, derived_state);
 
 ## L1 层
 
-### doc_chunks — 文档切片
+### doc_chunks — 文档切片 `✅ 0002_l1_doc.sql`
 
 ```sql
 CREATE TABLE doc_chunks (
@@ -61,7 +64,7 @@ CREATE TABLE doc_chunks (
 --       doc_chunks_vec(chunk_id, embedding float[1024])  -- embed content
 ```
 
-### code_nodes — 代码符号
+### code_nodes — 代码符号 `P3`
 
 ```sql
 CREATE TABLE code_nodes (
@@ -80,7 +83,7 @@ CREATE TABLE code_nodes (
 -- 无 vec: 符号检索靠名字不靠语义
 ```
 
-### code_edges — 符号关系边（无影子表，SQL 直查）
+### code_edges — 符号关系边（无影子表，SQL 直查）`P3`
 
 ```sql
 CREATE TABLE code_edges (
@@ -105,7 +108,7 @@ WITH RECURSIVE up(id, depth) AS (
 SELECT n.*, up.depth FROM up JOIN code_nodes n ON n.id = up.id;
 ```
 
-### code_files — 仓库文件清单（增量解析依据）
+### code_files — 仓库文件清单（增量解析依据）`P3`
 
 ```sql
 CREATE TABLE code_files (
@@ -120,7 +123,7 @@ CREATE TABLE code_files (
 
 唯一职责：二次 /ingest_code 逐文件比 hash，只有变化的文件重新解析。
 
-### traces — session 叙事摘要
+### traces — session 叙事摘要 `P2`
 
 ```sql
 CREATE TABLE traces (
@@ -139,7 +142,7 @@ CREATE TABLE traces (
 
 L2Extractor 的唯一原料（只读此表不读原始事件流）；也是 agent 可检索的历史记录。
 
-### l1_artifacts — 派生产物缓存（md 类，"只存不算"的落点）
+### l1_artifacts — 派生产物缓存（md 类，"只存不算"的落点）`P2`
 
 ```sql
 CREATE TABLE l1_artifacts (
@@ -163,7 +166,7 @@ code_wiki（我们生成）与 docgen 任务向 summary（他们生成我们缓�
 
 ## L2 层
 
-### facts — 单条经验事实（append-merge 型）
+### facts — 单条经验事实（append-merge 型）`P2`
 
 ```sql
 CREATE TABLE facts (
@@ -186,7 +189,7 @@ CREATE TABLE facts (
 同一事实反复出现不插新行，sample_count += 1。status 对应生命周期出口：
 merged（去重合并留尸）、promoted（升级通用）、retired（confidence 掉底）。
 
-### scenes — 场景口袋书索引
+### scenes — 场景口袋书索引 `P2`
 
 ```sql
 CREATE TABLE scenes (

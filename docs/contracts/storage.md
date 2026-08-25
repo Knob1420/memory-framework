@@ -2,6 +2,9 @@
 
 > 全项目唯一被允许碰 SQL 的模块。签名冻结：改接口必须走 PR 并同步更新本文件。
 > 表结构见 [schema.md](../schema/schema.md)。
+>
+> **实现状态**：已实现 = put_doc / put_session / read_session / pending / put_chunks /
+> mark_derived / mark_failed（L0 全部 + doc_chunks 三表）。其余为 P2/P3 规划签名。
 
 ## 三条铁律
 
@@ -26,27 +29,32 @@ def put_doc(self, content: bytes, meta: dict, workspace: str) -> L0Record
 去重逻辑的全部复杂度封在此方法，调用方只看 hash_hit。
 
 ```python
-def put_repo(self, repo_path: str, workspace: str) -> L0Record
+def put_session(self, workspace: str, session_id: str, events: list[Event]) -> None
 ```
-拷贝仓库到 data/l0/code/<id>/，逐文件算 hash 写 code_files。不做解析（那是 CodeAstDeriver 的事）。
+事件 append 到 data/<ws>/l0/session/<session_id>.jsonl（append-only，utf-8 显式）。
 
 ```python
-def put_session(self, workspace: str, session_id: str, events: list[dict]) -> None
+def read_session(self, workspace: str, session_id: str) -> list[Event]
 ```
-事件 append 到 data/l0/session/<session_id>.jsonl，按事件内 seq 幂等去重。
+读回事件并按 seq 排序（到达序 ≠ 逻辑序，消费端排序）。幂等去重由 ingestion 层的 seq 集合完成。
 
 ```python
 def pending(self, workspace: str | None = None) -> list[L0Record]
 ```
 演化引擎轮询口：取 derived_state='pending' 的记录。异步管线的拉入口。
 
+```python
+def put_repo(self, repo_path: str, workspace: str) -> L0Record   # P3
+```
+拷贝仓库到 data/l0/code/<id>/，逐文件算 hash 写 code_files。不做解析（那是 CodeAstDeriver 的事）。
+
 ## L1 写入（整体替换语义：先删该 l0_id 旧数据再插入，重跑不留残渣）
 
 ```python
-def put_chunks(self, l0_id: str, chunks: list[Chunk]) -> None          # Chunk 自带 embedding
-def put_code_graph(self, l0_id: str, nodes: list[CodeNode], edges: list[CodeEdge]) -> None
-def put_trace(self, l0_id: str, trace: Trace) -> None                  # scenario 在此落库
-def put_artifact(self, l0_id: str, kind: str, cache_key: str,
+def put_chunks(self, chunks: list[Chunk]) -> None    # ✅ 已实现；Chunk 自带 l0_id 与 embedding
+def put_code_graph(self, l0_id: str, nodes: list[CodeNode], edges: list[CodeEdge]) -> None  # P3
+def put_trace(self, l0_id: str, trace: Trace) -> None                  # P2；scenario 在此落库
+def put_artifact(self, l0_id: str, kind: str, cache_key: str,          # P2
                  md: str, summary: str) -> ArtifactHit
 ```
 
@@ -54,9 +62,10 @@ put_artifact 是缓存语义（与 put_doc 对称）：按 (l0_id, kind, cache_k
 `hit=True`，未命中写 .md + 表行返回 `hit=False`。
 docgen summary 缓存 = `put_artifact(l0_id, 'docgen_summary', f"{doc_hash}:{prompt_version}", ...)`。
 
-四个方法成功后内部把 l0_records 置 derived（调用方不管状态位）。
+四个方法成功后内部把 l0_records 置 derived（调用方不管状态位；当前实现由调度器
+mark_derived / mark_failed 显式回写，P2 起收进 put_* 内部）。
 
-## L2 读写
+## L2 读写（P2）
 
 ```python
 def put_fact(self, fact: Fact) -> str          # 不做去重！去重需 LLM，是演化引擎的职责
@@ -77,7 +86,7 @@ def put_scene(self, workspace: str, name: str, md: str, summary: str) -> None
 
 put_scene 写 .md + 更新表行（heat / fact_count / dirty 在此维护）。
 
-## 检索
+## 检索（待开发——P1 检索口 / P3 code）
 
 ```python
 @dataclass

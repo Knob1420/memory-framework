@@ -1,4 +1,4 @@
-"""ingestion 服务：store_events（契约 p0-contract §3 六步）。
+"""ingestion 服务：store_events（契约 docs/contracts/http-api.md）。
 
 不做的事：不解析 kind 语义、不排序（消费端按 seq 排）、不派生（演化引擎异步消费 pending）。
 """

@@ -1,4 +1,4 @@
-"""StorageEngine L0 实现（签名冻结于 docs/contracts/p0-contract.md §4）。
+"""StorageEngine L0 实现（签名冻结于 docs/contracts/storage.md）。
 
 铁律：不调 LLM、影子表（P1）对调用方不存在、所有读写隐含 workspace。
 L0 本体在文件系统（jsonl/原始文件），SQLite 只存元数据。
